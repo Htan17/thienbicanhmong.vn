@@ -161,4 +161,4 @@ GitHub Pages cập nhật sau 1 đến 2 phút. Nhấn `Ctrl + F5` để xoá ca
 
 ## Giấy phép
 
-Chọn và ghi rõ giấy phép (ví dụ MIT) trong file `LICENSE`.
+
