@@ -1,0 +1,215 @@
+        * { border-radius: 0 !important; transition: all 0.2s ease-out; box-sizing: border-box; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+        /* TỐI ƯU KHUNG HÌNH CHO MỌI THIẾT BỊ:
+           - "100vh" trên trình duyệt di động (đặc biệt Safari/Chrome iOS) tính theo chiều cao MÀN HÌNH,
+             không trừ đi thanh địa chỉ -> nội dung bị che khuất/cắt phía dưới. "100dvh" (dynamic viewport
+             height) tự động trừ đúng phần thanh địa chỉ đang hiển thị, khắc phục hoàn toàn lỗi này.
+           - Thêm biến --app-vh (đặt bằng JS bên dưới) làm phương án dự phòng cho các trình duyệt cũ
+             (Samsung Internet đời thấp, WebView cũ...) chưa hỗ trợ dvh.
+           - Thêm safe-area-inset để không bị tai thỏ/thanh cử chỉ che mất nội dung trên iPhone. */
+        html { height: 100%; }
+        body { background: #000; color: #f5f5dc; font-family: 'Montserrat', 'Noto Sans', 'Noto Sans Math', 'Noto Sans Symbols 2', 'Noto Sans Symbols', sans-serif; margin: 0; overflow: hidden; height: 100vh; height: calc(var(--app-vh, 1vh) * 100); height: 100dvh; }
+        /* SỬA LỖI PHÔNG CHỮ KÝ HIỆU TOÁN/LÝ: font Montserrat gốc KHÔNG có sẵn chữ Hy Lạp (ω, π, Δ, θ, Σ...)
+           và các ký hiệu toán học (√, ≤, ≥, ±, ∞, →...) nên trình duyệt/WebView (đặc biệt trong app Zalo)
+           tự thay bằng phông hệ thống lệch tông hoặc hiện ô vuông trống (tofu). Khai báo thêm chuỗi phông
+           dự phòng Noto Sans/Noto Sans Math/Noto Sans Symbols ở trên đảm bảo MỌI ký tự không có trong
+           Montserrat sẽ tự động rơi xuống phông dự phòng có đủ ký tự đó thay vì hiện lỗi. */
+
+        /* 🆕 TỐI ƯU HIỂN THỊ THEO THIẾT BỊ:
+           - MÁY TÍNH (màn hình rộng): dùng TOÀN BỘ màn hình trình duyệt thay vì bị bó hẹp trong 1 khung
+             480px lơ lửng giữa màn hình trống như trước (không còn viền/box-shadow khung điện thoại giả).
+             Nội dung từng màn hình vẫn tự căn giữa + giữ chiều rộng vừa đọc (nhờ items-center bên dưới +
+             max-w-* sẵn có của từng khung), không bị kéo giãn dính chữ khó đọc.
+           - ĐIỆN THOẠI: giữ nguyên như cũ, luôn vừa khít đúng kích thước màn hình thiết bị thật (100dvh/
+             100vw qua biến --app-vh/--app-vw), không đổi gì so với trước. */
+        #root { height: 100%; width: 100%; max-width: 100vw; overflow: hidden; }
+        .font-playfair { font-family: 'Playfair Display', serif; }
+        /* Dùng cho nội dung câu hỏi/đáp án có thể chứa ký hiệu Toán-Lý-Hoá đặc biệt */
+        .math-text { font-family: 'Montserrat', 'Noto Sans', 'Noto Sans Math', 'Noto Sans Symbols 2', 'Noto Sans Symbols', sans-serif; font-variant-ligatures: none; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #b8860b; }
+        
+        .lao-ma-aura { color: #ff3333 !important; text-shadow: 0 0 10px #ff0000; font-weight: 900; }
+        .streak-fire { color: #ff4500; text-shadow: 0 0 8px #ff4500; }
+        
+        .frame-luctruc { border: 2px solid #22c55e !important; box-shadow: 0 0 15px 2px #22c55e; }
+        .frame-huyetma { border: 2px solid #dc2626 !important; box-shadow: 0 0 20px 3px #dc2626; }
+        .frame-cuuu { border: 2px solid #a855f7 !important; box-shadow: 0 0 25px 4px #a855f7; }
+        .frame-chanlong { border: 2px solid #ffdf00 !important; box-shadow: 0 0 30px 5px #ffdf00; }
+        .frame-viemde { border: 3px solid #ff4500 !important; box-shadow: 0 0 40px 8px #ff4500; background: #ff4500; }
+        .frame-banghan { border: 2px solid #00ffff !important; box-shadow: 0 0 25px 5px #00ffff; }
+        .frame-mathan { border: 2px solid #8b0000 !important; box-shadow: 0 0 40px 10px #8b0000; background: #2a0000; }
+        
+        .nf-vip { background: linear-gradient(90deg, #b8860b, #ffdf00); color: #000; padding: 2px 6px; }
+        .nf-maton { background: #450a0a; border: 1px solid #ef4444; color: #fca5a5; padding: 2px 6px; }
+        .nf-kiemthan { background: #083344; border: 1px solid #06b6d4; color: #cffafe; padding: 2px 6px; }
+        .nf-viemde { background: linear-gradient(90deg, #3f0000, #8b0000); color: #ffdf00; padding: 4px 12px; font-weight: 900; }
+        .nf-daoton { background: #1e3a8a; border: 1px solid #60a5fa; color: #bfdbfe; padding: 2px 6px; }
+        .nf-tiende { background: linear-gradient(45deg, #ff00cc, #3333ff); color: #fff; padding: 4px 12px; font-weight: 900; text-shadow: 0 0 5px currentColor; box-shadow: 0 0 10px rgba(255,0,204,0.5); }
+        .nf-tongsu { background: linear-gradient(90deg, #111827, #4b5563); border: 1px solid #9ca3af; color: #f3f4f6; padding: 4px 12px; font-weight: 900; letter-spacing: 2px; }
+        .nf-thanthoai { background: linear-gradient(90deg, #ff00cc, #3333ff, #00ffff); color: #fff; padding: 4px 12px; font-weight: 900; text-shadow: 0 0 5px #fff; animation: rainbowBg 3s infinite; }
+        
+        .aura-sacred { animation: sacredPulse 1.5s infinite alternate; border: 2px solid #818cf8 !important; }
+        @keyframes sacredPulse { from { box-shadow: 0 0 10px #4f46e5, inset 0 0 10px #4f46e5; } to { box-shadow: 0 0 35px #818cf8, inset 0 0 25px #818cf8; } }
+        .aura-blood { animation: bloodPulse 1.5s infinite alternate; border: 2px solid #ef4444 !important; }
+        @keyframes bloodPulse { from { box-shadow: 0 0 10px #7f1d1d, inset 0 0 10px #7f1d1d; } to { box-shadow: 0 0 35px #ef4444, inset 0 0 25px #ef4444; } }
+        .aura-gold { animation: goldPulse 1.5s infinite alternate; border: 2px solid #eab308 !important; }
+        @keyframes goldPulse { from { box-shadow: 0 0 10px #713f12, inset 0 0 10px #713f12; } to { box-shadow: 0 0 45px #eab308, inset 0 0 30px #eab308; } }
+        .aura-starlight { animation: starlightPulse 2s infinite alternate; border: 2px solid #c084fc !important; }
+        @keyframes starlightPulse { from { box-shadow: 0 0 10px #a855f7, inset 0 0 10px #a855f7; } to { box-shadow: 0 0 45px #e879f9, inset 0 0 30px #e879f9; } }
+        .aura-chaos { animation: chaosPulse 2s infinite alternate; border: 2px solid #6ee7b7 !important; position: relative; z-index: 10; }
+        @keyframes chaosPulse { from { box-shadow: 0 0 10px #059669, inset 0 0 10px #059669; } to { box-shadow: 0 0 45px #34d399, inset 0 0 30px #10b981; } }
+
+        .aura-rainbow { animation: rainbowPulse 3s infinite linear; border: 2px solid #ff0000 !important; }
+        @keyframes rainbowPulse { 0% { border-color: #ff0000 !important; box-shadow: 0 0 25px #ff0000, inset 0 0 20px #ff0000; } 33% { border-color: #00ff00 !important; box-shadow: 0 0 25px #00ff00, inset 0 0 20px #00ff00; } 66% { border-color: #0000ff !important; box-shadow: 0 0 25px #0000ff, inset 0 0 20px #0000ff; } 100% { border-color: #ff0000 !important; box-shadow: 0 0 25px #ff0000, inset 0 0 20px #ff0000; } }
+        @keyframes rainbowBg { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        .theme-blood { background-color: rgba(69, 10, 10, 0.8) !important; border-color: #ef4444 !important; box-shadow: inset 0 0 15px rgba(239,68,68,0.2); }
+        .theme-abyss { background-color: rgba(59, 7, 100, 0.8) !important; border-color: #a855f7 !important; box-shadow: inset 0 0 15px rgba(168,85,247,0.2); }
+        .theme-gold { background-color: rgba(66, 32, 6, 0.8) !important; border-color: #eab308 !important; box-shadow: inset 0 0 15px rgba(234,179,8,0.2); }
+
+        /* TỐI ƯU KHUNG HÌNH: các khung modal/nội dung dùng đơn vị vh cố định (VD h-[85vh]) bị Tailwind
+           CDN tính theo 100% chiều cao MÀN HÌNH thay vì viewport thực tế đang hiển thị trên di động,
+           khiến phần cuối khung bị che sau thanh địa chỉ/thanh cử chỉ. Ghi đè bằng "dvh" (được hỗ trợ
+           rộng rãi) để khung luôn vừa khít viewport thật trên mọi thiết bị. Dùng !important vì style
+           do Tailwind CDN tự chèn (JIT runtime) có thể nằm sau block CSS này trong DOM.
+           Đặt lại bằng biến JS --app-vh làm phương án dự phòng cho trình duyệt chưa hỗ trợ dvh. */
+        .h-\[80vh\] { height: calc(var(--app-vh, 1vh) * 80) !important; height: 80dvh !important; }
+        .h-\[85vh\] { height: calc(var(--app-vh, 1vh) * 85) !important; height: 85dvh !important; }
+        .h-\[90vh\] { height: calc(var(--app-vh, 1vh) * 90) !important; height: 90dvh !important; }
+        .mt-\[10vh\] { margin-top: calc(var(--app-vh, 1vh) * 10) !important; margin-top: 10dvh !important; }
+        /* Chừa khoảng an toàn (tai thỏ / thanh cử chỉ) cho thanh trạng thái trên cùng và các khung fixed */
+        .safe-top { padding-top: env(safe-area-inset-top, 0px); }
+        .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+        .animate-fadeIn { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .slide-in-right { animation: slideInRight 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* 🔄 CHẾ ĐỘ NGANG (v2): xoay GIẢ bằng CSS transform thay vì phụ thuộc Fullscreen API/Screen
+           Orientation API (không ổn định trong WebView đóng gói APK). Công thức xoay chuẩn: đặt khung có
+           kích thước lật ngược (width=100vh, height=100vw), dịch sang phải hết màn hình rồi xoay 90 độ
+           quanh góc trên-trái -> khung nằm ngang vừa khít màn hình dù máy đang giữ dọc. Luôn có nút thoát
+           riêng trong khung này để chắc chắn tắt được, không phụ thuộc trạng thái xoay máy thật.
+           .landscape-fs cần đứng NGOÀI mọi khung cha có transform/overflow khác, nên chèn thẳng vào body
+           qua React (không lồng trong .h-\[80vh\] etc để tránh bị kẹp kích thước bởi CSS ép chiều cao ở trên). */
+        .landscape-fs { position: fixed; top: 0; left: 100%; width: 100vh; height: 100vw; transform-origin: 0 0; transform: rotate(90deg); background: #000; z-index: 9990; }
+        .landscape-fs.use-app-vh { width: calc(var(--app-vh, 1vh) * 100); height: calc(var(--app-vw, 1vw) * 100); }
+        /* SỬA LỖI NÚT NGANG/DỌC KHÔNG PHẢN HỒI: khung xoay CSS ở trên đôi khi khiến các phần tử con bị
+           trễ/nuốt sự kiện chạm trên vài WebView cũ. Ép touch-action + tăng vùng chạm cho các nút điều
+           khiển trong Chế Độ Ngang để luôn bấm trúng, kể cả khi khung đã bị xoay 90 độ bằng CSS. */
+        .landscape-fs button { touch-action: manipulation; -webkit-tap-highlight-color: transparent; position: relative; z-index: 1; }
+
+        /* ============================================================
+           🗺️ TU LUYỆN CHI LỘ (LUYỆN THI): CSS riêng cho Đạo Đồ (sơ đồ cây kiểu Duolingo), Bát Quái Đồ,
+           Đạo Hữu Bảng và hiệu ứng pháo hoa chiến thắng.
+           ============================================================ */
+        /* Pháo hoa CSS thuần cho hiệu ứng Chiến Thắng (xem ConfettiBurst) */
+        .confetti-piece { position: absolute; top: -10px; width: 8px; height: 14px; opacity: 0.9; animation-name: confettiFall; animation-timing-function: ease-in; animation-fill-mode: forwards; }
+        @keyframes confettiFall { 0% { transform: translateY(-10px) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(540deg); opacity: 0; } }
+
+        /* Đạo Đồ: đường nối dọc phía sau các nút Ải, mỗi nút lệch trái/phải xen kẽ như Duolingo */
+        .exam-path-track { position: relative; }
+        .exam-path-track::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 4px; margin-left: -2px; background: repeating-linear-gradient(to bottom, #3f3f46 0, #3f3f46 10px, transparent 10px, transparent 20px); z-index: 0; }
+        .exam-node-wrap { position: relative; z-index: 1; display: flex; margin-bottom: 22px; }
+        .exam-node-wrap.pos-left { justify-content: flex-start; padding-right: 52%; }
+        .exam-node-wrap.pos-right { justify-content: flex-end; padding-left: 52%; }
+        .exam-node-wrap.pos-mid { justify-content: center; }
+        /* 🆕 NÂNG CẤP THẨM MỸ NÚT ẢI: trước đây mỗi trạng thái chỉ có 1 màu phẳng (background: #eab308...)
+           khiến các nút trông "cứng ngắt, thiếu sắc" - icon emoji trần không có chiều sâu. Nay dùng
+           gradient chéo (sáng góc trên trái -> tối góc dưới phải) để tạo cảm giác nút "nổi khối" như đá
+           quý, thêm lớp ::before bóng kính (highlight) phủ 1/3 trên, và drop-shadow cho icon để icon nổi
+           khối thay vì dẹt. Vẫn giữ nguyên góc vuông (border-radius:0) đúng tông cổ trang xuyên suốt app. */
+        .exam-node-btn { width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; font-size: 28px; border: 3px solid; position: relative; flex-shrink: 0; overflow: hidden; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.55)); }
+        .exam-node-btn::before { content: ''; position: absolute; inset: 0; background: linear-gradient(155deg, rgba(255,255,255,0.38) 0%, rgba(255,255,255,0) 38%, rgba(0,0,0,0.28) 100%); pointer-events: none; }
+        .exam-node-btn:active { transform: translateY(3px); box-shadow: none !important; }
+        .exam-node-done { background: linear-gradient(155deg, #fef08a, #eab308 45%, #a16207 100%); border-color: #fde047; color: #451a03; box-shadow: 0 0 20px rgba(234,179,8,0.6), 0 5px 0 #92400e; }
+        .exam-node-unlocked { background: linear-gradient(155deg, #a5f3fc, #0891b2 45%, #0e7490 100%); border-color: #22d3ee; color: #fff; box-shadow: 0 0 20px rgba(34,211,238,0.5), 0 5px 0 #0e7490; animation: nodePulse 1.8s infinite; }
+        @keyframes nodePulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+        .exam-node-locked { background: #18181b; border-color: #3f3f46; color: #52525b; box-shadow: 0 5px 0 #09090b; filter: grayscale(0.5) drop-shadow(0 2px 2px rgba(0,0,0,0.55)); }
+        .exam-node-boss { border-radius: 0 !important; width: 76px; height: 76px; font-size: 34px; }
+        .exam-node-boss.exam-node-unlocked { background: linear-gradient(155deg, #fca5a5, #b91c1c 45%, #450a0a 100%); border-color: #ef4444; box-shadow: 0 0 25px rgba(239,68,68,0.6), 0 5px 0 #450a0a; }
+        /* 🆕 Ải Ôn Tập (🔁) trước đây khi mở khoá dùng CHUNG màu cyan với Ải thường, không phân biệt được
+           bằng mắt - nay có màu tím riêng để Đạo Đồ đa sắc hơn, dễ nhận diện loại Ải hơn khi nhìn lướt. */
+        .exam-node-review.exam-node-unlocked { background: linear-gradient(155deg, #e9d5ff, #7e22ce 45%, #581c87 100%); border-color: #c084fc; box-shadow: 0 0 20px rgba(192,132,252,0.55), 0 5px 0 #581c87; }
+        .exam-node-label { position: absolute; top: 70px; width: 110px; text-align: center; left: 50%; transform: translateX(-50%); font-size: 9px; font-weight: 900; text-transform: uppercase; color: #a1a1aa; letter-spacing: 0.5px; line-height: 1.3; }
+
+        /* 🏆 ĐÍCH ĐẾN CỦA ĐẠO ĐỒ (ĐẠO THÀNH): nút cuối cùng của sơ đồ cây, khoá cho tới khi vượt hết mọi Ải,
+           sau đó phát sáng vàng kim và bấm vào được để xem lại bảng tổng kết Đạo Lộ. */
+        .exam-path-track.has-final::before { bottom: 112px; }
+        .exam-node-final { border-radius: 0 !important; width: 84px; height: 84px; font-size: 40px; }
+        .exam-node-final + .exam-node-label { top: 92px; font-size: 10px; }
+        .exam-node-final-done { background: linear-gradient(155deg, #fffbeb, #facc15 40%, #b45309 100%); border-color: #fde047; color: #451a03; box-shadow: 0 0 30px rgba(250,204,21,0.75), 0 6px 0 #92400e; animation: finalGlow 2.2s infinite; cursor: pointer; }
+        @keyframes finalGlow { 0%,100% { transform: scale(1); box-shadow: 0 0 22px rgba(250,204,21,0.55), 0 6px 0 #92400e; } 50% { transform: scale(1.07); box-shadow: 0 0 42px rgba(250,204,21,0.95), 0 6px 0 #92400e; } }
+
+        /* Bát Quái Đồ (biểu đồ mạng nhện) */
+        .radar-axis-label { font-size: 9px; font-weight: 900; fill: #d4d4d8; text-transform: uppercase; }
+
+        /* Danh hiệu Phong Thái (Đạo Hữu Bảng) - cùng "họ" với .nf-* nhưng tông xanh lam Đạo Hữu để phân biệt */
+        .ept-gold { background: linear-gradient(90deg, #78350f, #eab308); color: #000; padding: 2px 8px; font-weight: 900; box-shadow: 0 0 8px rgba(234,179,8,0.5); }
+        .ept-silver { background: linear-gradient(90deg, #3f3f46, #a1a1aa); color: #000; padding: 2px 8px; font-weight: 900; }
+        .ept-bronze { background: linear-gradient(90deg, #7c2d12, #ea580c); color: #fff; padding: 2px 8px; font-weight: 900; }
+        .difficulty-chip { border: 2px solid; padding: 10px 6px; text-align: center; cursor: pointer; }
+        .difficulty-chip.active { box-shadow: 0 0 15px currentColor; }
+
+        /* ============================================================
+           📐 KHUNG HÌNH ĐA THIẾT BỊ (điện thoại -> tablet -> laptop -> màn hình lớn)
+           - Điện thoại dọc (<640px): GIỮ NGUYÊN như cũ.
+           - Trước đây khung chính bị kẹt ở max-w-lg (512px) nên trên laptop chỉ là 1 cột hẹp giữa màn hình.
+             Nay chiều rộng khung tự nới theo màn hình qua các biến --frame-max / --panel-max / --quiz-max,
+             chiều cao khung chính lấp đầy phần còn lại dưới thanh top bar (4rem) thay vì cố định 80-85%.
+           - Đặt CUỐI khối <style> + dùng !important để thắng cả CSS Tailwind CDN chèn vào sau.
+           ============================================================ */
+        :root { --frame-max: 512px; --panel-max: 384px; --quiz-max: 448px; }
+        @media (min-width: 640px)  { :root { --frame-max: 720px;  --panel-max: 560px; --quiz-max: 640px; } }
+        @media (min-width: 1024px) { :root { --frame-max: 960px;  --panel-max: 680px; --quiz-max: 800px; } }
+        @media (min-width: 1440px) { :root { --frame-max: 1120px; --panel-max: 760px; --quiz-max: 880px; } }
+
+        /* Khung màn hình chính (Tàng Kinh Các, Đạo Đồ, Học Qua Video, BXH...) + thanh top bar */
+        .max-w-lg { max-width: min(var(--frame-max), 100%) !important; }
+        /* Bảng/khung ải dạng panel (ải ôn tập video, danh sách, kết quả...) */
+        .max-w-sm.h-\[80vh\], .max-w-sm.h-\[85vh\], .max-w-sm.h-\[90vh\] { max-width: min(var(--panel-max), 100%) !important; }
+        /* Khung làm bài trắc nghiệm */
+        .max-w-md.h-\[85vh\] { max-width: min(var(--quiz-max), 100%) !important; }
+
+        /* Chiều cao: khung chính lấp đầy phần dưới top bar (wrapper có pt-16 = 4rem, chừa thêm 0.5rem) */
+        @media (min-width: 640px) {
+            .max-w-lg.h-\[80vh\], .max-w-lg.h-\[85vh\] {
+                height: calc(var(--app-vh, 1vh) * 100 - 4.5rem) !important;
+                height: calc(100dvh - 4.5rem) !important;
+            }
+        }
+
+        /* Đạo Đồ: giữ sơ đồ cây gọn, căn giữa - không bị kéo giãn zigzag sang tận 2 mép khi khung rộng */
+        .exam-path-track { max-width: 520px; margin-left: auto; margin-right: auto; }
+
+        /* Tàng Kinh Các: danh sách Bí Tịch chia 2 cột trên laptop cho đỡ trống */
+        @media (min-width: 1024px) {
+            .lib-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+            .lib-grid > * { margin-top: 0 !important; }
+            .lib-grid > p { grid-column: 1 / -1; }
+        }
+
+        /* Chế Độ Ngang (video): khung xoay 90° CHỈ dành cho điện thoại đang cầm dọc. Nếu màn hình đã nằm ngang
+           (laptop, tablet ngang, điện thoại xoay ngang) thì KHÔNG xoay nữa, phủ kín màn hình luôn. */
+        @media (orientation: landscape) {
+            .landscape-fs, .landscape-fs.use-app-vh {
+                left: 0; transform: none;
+                width: 100vw; width: calc(var(--app-vw, 1vw) * 100);
+                height: 100vh; height: calc(var(--app-vh, 1vh) * 100);
+            }
+        }
+
+        /* Chuột/touchpad: thanh cuộn 4px quá nhỏ để kéo, nới lên 8px (điện thoại cảm ứng không bị ảnh hưởng) */
+        @media (hover: hover) and (pointer: fine) {
+            .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+            .custom-scrollbar { scrollbar-width: thin; scrollbar-color: #b8860b transparent; }
+        }
+    
+        /* 🖥️ BỐ CỤC DESKTOP/LAPTOP cho Học Qua Video: video cố định bên TRÁI, toàn bộ phân tích/văn bản/từ vựng bên PHẢI */
+        @media (min-width: 1024px) and (min-height: 560px) {
+            #vl-root { max-width: 1280px !important; height: calc(var(--app-vh, 1vh) * 92) !important; }
+            #vl-body { display: grid !important; grid-template-columns: minmax(0, 1.55fr) minmax(360px, 1fr); column-gap: 16px; row-gap: 12px; align-content: start; }
+            #vl-body > * { grid-column: 2; margin: 0 !important; min-width: 0; }
+            #vl-body > #yt-player-wrap { grid-column: 1; grid-row: 1 / span 60; position: sticky; top: 0; align-self: start; z-index: 5; }
+        }
