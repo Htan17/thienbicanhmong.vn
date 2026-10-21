@@ -1,0 +1,102 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+    function changedKeys() { return request.resource.data.diff(resource.data).affectedKeys(); }
+    function oldList(field) { return resource.data.get(field, []); }
+    function newList(field) { return request.resource.data.get(field, []); }
+
+    // ===== users/{uid} =====
+    match /users/{uid} {
+      allow read: if signedIn();
+      allow create: if isOwner(uid);
+      allow delete: if isOwner(uid);
+
+      allow update: if
+        // Chủ tài khoản được sửa hồ sơ của mình (gồm khôi phục chuỗi, Linh Thạch, Danh Vọng...)
+        isOwner(uid)
+        // Gửi lời mời kết bạn / tông môn: chỉ được THÊM vào danh sách requests của người khác
+        || (signedIn() && changedKeys().hasOnly(['requests'])
+            && newList('requests').size() >= oldList('requests').size())
+        // Kết bạn hai chiều: chỉ được thêm đúng UID của chính mình vào friends
+        || (signedIn() && changedKeys().hasOnly(['friends'])
+            && newList('friends').size() <= oldList('friends').size() + 1
+            && newList('friends').hasAny([request.auth.uid]))
+        // Trục xuất khỏi tông môn: chỉ được đặt guild = null
+        || (signedIn() && changedKeys().hasOnly(['guild'])
+            && request.resource.data.guild == null)
+        // Thưởng cuối mùa: chỉ được TĂNG Linh Thạch/Danh Vọng, giới hạn mỗi lần
+        || (signedIn() && changedKeys().hasOnly(['spirit', 'fame'])
+            && request.resource.data.get('spirit', 0) >= resource.data.get('spirit', 0)
+            && request.resource.data.get('spirit', 0) - resource.data.get('spirit', 0) <= 10000
+            && request.resource.data.get('fame', 0) >= resource.data.get('fame', 0)
+            && request.resource.data.get('fame', 0) - resource.data.get('fame', 0) <= 10000)
+        // Đặt lại điểm mùa / điểm Đạo Lộ trong ngày: chỉ được về 0
+        || (signedIn() && changedKeys().hasOnly(['seasonScore'])
+            && request.resource.data.seasonScore == 0)
+        || (signedIn() && changedKeys().hasOnly(['seasonScore', 'seasonLessons'])
+            && request.resource.data.get('seasonScore', 0) == 0
+            && request.resource.data.get('seasonLessons', 0) == 0)
+        || (signedIn() && changedKeys().hasOnly(['examPathDailyScore'])
+            && request.resource.data.examPathDailyScore == 0)
+        // Trao danh hiệu Đạo Lộ cuối ngày
+        || (signedIn() && changedKeys().hasOnly(['examPathTitles']));
+
+      // Khoá Gemini API riêng: chỉ chủ tài khoản
+      match /private/{docId} {
+        allow read, write: if isOwner(uid);
+      }
+
+      // Dữ liệu ôn từ vựng (SRS): chỉ chủ tài khoản
+      match /srs/{docId} {
+        allow read, write: if isOwner(uid);
+      }
+    }
+
+    // ===== guilds/{id} (Tông Môn) =====
+    match /guilds/{gid} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.leader == request.auth.uid;
+      allow update: if signedIn() && (
+        resource.data.leader == request.auth.uid
+        || changedKeys().hasOnly(['members', 'exp'])
+      );
+      allow delete: if signedIn() && (
+        resource.data.leader == request.auth.uid
+        || resource.data.get('members', []).size() == 0
+      );
+    }
+
+    // ===== quizShares/{code} (Mã Bí Tịch ngắn 8 ký tự) =====
+    match /quizShares/{code} {
+      allow get: if signedIn();
+      allow list: if false;
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['t', 'd', 'owner', 'createdAt'])
+        && request.resource.data.owner == request.auth.uid;
+      allow update: if false;
+      allow delete: if signedIn() && resource.data.owner == request.auth.uid;
+    }
+
+    // ===== meta/* (mốc đặt lại mùa) =====
+    match /meta/{docId} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && request.resource.data.keys().hasOnly(['nextReset']);
+    }
+
+    // ===== videoShares/{code} (mã chia sẻ video) =====
+    match /videoShares/{code} {
+      allow get: if signedIn();
+      allow list: if false;
+      allow create: if signedIn();
+      allow update, delete: if false;
+    }
+
+    // Mọi thứ còn lại: chặn
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
