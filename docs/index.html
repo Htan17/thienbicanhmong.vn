@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <title>Thiên Kiêu Bí Cảnh - Học Ngoại Ngữ Qua Video, Luyện Đề & Ôn Từ Vựng Online</title>
+    <meta name="description" content="Thiên Kiêu Bí Cảnh: web app học ngoại ngữ qua video YouTube (tiếng Trung, Nhật, Hàn, Anh) với phụ đề, Pinyin/Romaji, dịch nghĩa, luyện viết chữ Hán, tạo ải luyện đề trắc nghiệm, ôn từ vựng và bảng xếp hạng.">
+    <meta name="keywords" content="học tiếng Trung qua video, học tiếng Nhật, học ngoại ngữ qua YouTube, luyện đề trắc nghiệm online, ôn từ vựng, luyện viết chữ Hán, Pinyin, Romaji, Thiên Kiêu Bí Cảnh">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <link rel="canonical" href="https://htan17.github.io/thienbicanhmong.vn/">
+    <meta property="og:url" content="https://htan17.github.io/thienbicanhmong.vn/">
+    <meta name="application-name" content="Thiên Kiêu Bí Cảnh">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Thiên Kiêu Bí Cảnh">
+    <meta property="og:title" content="Thiên Kiêu Bí Cảnh - Học Ngoại Ngữ Qua Video & Luyện Đề">
+    <meta property="og:description" content="Học tiếng Trung, Nhật, Hàn, Anh qua video YouTube có phụ đề, phiên âm, dịch nghĩa; luyện đề trắc nghiệm và ôn từ vựng như chơi game.">
+    <meta property="og:locale" content="vi_VN">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Thiên Kiêu Bí Cảnh - Học Ngoại Ngữ Qua Video & Luyện Đề">
+    <meta name="twitter:description" content="Học ngoại ngữ qua video, luyện đề trắc nghiệm, ôn từ vựng và luyện viết chữ Hán.">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Thiên Kiêu Bí Cảnh","url":"https://htan17.github.io/thienbicanhmong.vn/","alternateName":"Thien Kieu Bi Canh","applicationCategory":"EducationalApplication","operatingSystem":"Any (Web, Windows, macOS, Android, iOS)","inLanguage":"vi","description":"Web app học ngoại ngữ qua video YouTube, luyện đề trắc nghiệm, ôn từ vựng và luyện viết chữ Hán.","offers":{"@type":"Offer","price":"0","priceCurrency":"VND"}}</script>
+
+    <!-- TỐI ƯU TẢI TRANG: báo trước trình duyệt kết nối sớm tới các CDN/API bên ngoài (DNS + TLS handshake
+         chạy song song khi tải HTML thay vì đợi đến khi gặp từng thẻ <script>), giúp rút ngắn thời gian tải lần đầu. -->
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://firestore.googleapis.com">
+    <link rel="dns-prefetch" href="https://identitytoolkit.googleapis.com">
+
+    <script src="js/boot.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+    <!-- TAILWIND: mặc định dùng CDN (chạy ngay, không cần build). ĐỂ BIÊN DỊCH LÚC BUILD (nhanh hơn, không cảnh báo, chạy offline):
+         1) npm i && npm run build:css  2) xoá thẻ <script> CDN bên dưới và bỏ chú thích thẻ <link> ngay dưới nó. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- <link rel="stylesheet" href="css/tailwind.css"> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.21/mammoth.browser.min.js"></script>
+    <!-- ✍️ LUYỆN VIẾT CHỮ: HanziWriter vẽ đúng thứ tự nét chuẩn + tự chấm đúng/sai từng nét khi người
+         dùng viết theo, kèm hoạt ảnh minh hoạ mẫu - dùng cho tính năng "Luyện Viết Chữ" ở Học Qua Video. -->
+    <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3/dist/hanzi-writer.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Playfair+Display:ital,wght@0,700;1,700&family=Noto+Sans:wght@400;700;900&family=Noto+Sans+Symbols:wght@400;700&family=Noto+Sans+Symbols+2&family=Noto+Sans+Math&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <noscript><h1>Thiên Kiêu Bí Cảnh - Học ngoại ngữ qua video</h1><p>Web app học tiếng Trung, Nhật, Hàn, Anh qua video YouTube: phụ đề, Pinyin/Romaji, dịch nghĩa từng câu, luyện viết chữ Hán, tạo ải luyện đề trắc nghiệm, ôn từ vựng và bảng xếp hạng. Vui lòng bật JavaScript để sử dụng.</p></noscript>
+    <div id="root">
+        <div style="display:flex; justify-content:center; align-items:center; height:100vh; color:#ffdf00; font-weight:bold; background:#000;">
+            ĐANG TỤ LINH KHÍ...
+        </div>
+    </div>
+
+    <!-- Đã biên dịch sẵn JSX -> JS (không cần Babel trong trình duyệt). Sửa code ở js/app.jsx rồi chạy build.sh -->
+    <script src="js/app.min.js"></script>
+</body>
+</html>
