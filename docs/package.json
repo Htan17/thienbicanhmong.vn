@@ -1,0 +1,22 @@
+{
+  "name": "thien-kieu-bi-canh",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Thiên Kiêu Bí Cảnh - web app học ngoại ngữ qua video (phi thương mại)",
+  "type": "module",
+  "scripts": {
+    "build": "sh ./build.sh",
+    "build:css": "tailwindcss -c tailwind.config.cjs -i src/styles/tailwind.css -o css/tailwind.css --minify",
+    "dev": "vite",
+    "build:vite": "vite build",
+    "test": "node --test tests/*.test.mjs",
+    "check:globals": "node tools/check-globals.cjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "tailwindcss": "3.4.17",
+    "postcss": "^8.4.49",
+    "autoprefixer": "^10.4.20",
+    "vite": "^5.4.11"
+  }
+}
