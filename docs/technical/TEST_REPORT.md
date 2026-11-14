@@ -1,12 +1,25 @@
-# TEST_REPORT — 12/11/2026
-Môi trường: Linux sandbox, Node v22.23.4, KHÔNG có mạng, esbuild 0.28.2. Chưa chạy trên Windows, chưa có Emulator/trình duyệt.
+# TEST_REPORT — V15.0.0-rc.0 (chạy lại 14/11/2026)
+
+Môi trường: Linux sandbox, Node v22.23.4, npm 10.9.9, **không có mạng**, chưa cài `node_modules`, esbuild 0.28.2 có sẵn ngoài dự án (bản pin `^0.25.0`). Không có firebase-tools, trình duyệt thật hay Emulator. Lệnh chạy trên bản đã dọn (`THIEN_KIEU_BI_CANH_V15_CLEAN_COMMERCIAL_EDITION`).
+
 | Lệnh | Kết quả | Ghi chú |
 |---|---|---|
-| `npm run test` (tests/*.test.mjs) | 11/11 pass | lọc từ khoá + kiểm duyệt |
-| `npm run test:frontend` (src/**/*.test.js) | 90/90 pass | adaptive, docx-import, quiz-v2 |
-| `npm run test:functions` | 33/33 pass | logic thuần: kinh tế, catalog khớp gameData, parity streak, checkpoint, guild, region |
-| `node tools/check-globals.cjs` | OK | không có biến chưa khai báo |
-| `node tools/build.mjs` + `--check` | PASS | bundle 477.7 KB, đồng bộ `src/` |
-| `node tools/preflight.mjs` | 2 FAIL / 1 WARN | thiếu 2 lockfile (BLOCKED mạng); chưa cài functions/node_modules |
-| `npm run test:rules`, Emulator, integration, E2E, browser smoke, responsive | CHƯA CHẠY | cần firebase-tools + mạng/trình duyệt. Ghi kết quả lần chạy đầu của bạn vào đây |
-Các test trên là test đơn vị/logic; chúng KHÔNG chứng minh các luồng Firestore, Rules, Functions hoạt động end-to-end.
+| `npm run test` (tests/*.test.mjs) | **PASS** 11/11 | lọc từ khoá + kiểm duyệt |
+| `npm run test:frontend` (src/**/*.test.*) | **PASS** 91/91 | adaptive, docx-import, quiz-v2, quizFingerprint |
+| `npm run test:functions` | **PASS** 50/50 | kinh tế, catalog khớp gameData, parity, checkpoint, guild, region, equip, admin |
+| Tổng unit | **PASS** 152/152 | root 11 + frontend 91 + functions 50 |
+| `node tools/check-globals.cjs` | **PASS** | không có biến chưa khai báo |
+| `node tools/build.mjs --check` | **PASS** (có điều kiện) | bundle `e6162045b0` khớp `src/` với esbuild 0.28.2; sẽ báo lệch nếu dùng esbuild khác bản này |
+| `node tools/preflight.mjs` (`npm run check`) | **FAIL** 2 / WARN 2 | thiếu 2 lockfile (BLOCKED: cần mạng); chưa cài `node_modules` |
+| `npm ci` (gốc, `functions/`) | **BLOCKED** | không có lockfile và không có mạng |
+| `npm run test:rules` | **BLOCKED** | thiếu `@firebase/rules-unit-testing` và firebase-tools (`ERR_MODULE_NOT_FOUND`) |
+| `npm run test:integration` | **BLOCKED** | thoát ngay với "Thiếu firebase-admin: chạy `npm ci` trong functions/" (chưa cài dependencies); ngoài ra cần Emulator đang chạy. Chưa có kết quả logic |
+| Emulator, E2E, browser smoke, responsive, load test | **NOT RUN** | |
+
+Các test đạt là test đơn vị/logic; chúng KHÔNG chứng minh Rules, Firestore, Cloud Functions hay giao diện hoạt động end-to-end.
+
+## Ghi chú về số liệu cũ
+Các số 134/134 (11/90/33), 151/151 (11/91/49) và 90/90, 33/33 trong tài liệu cũ là kết quả của các lần chạy trước và **không** còn là số hiện hành. Lần chạy này: 11/91/50 = 152.
+
+## Thay đổi script liên quan tới kiểm thử (14/11/2026)
+`npm run test:integration` trước đây là `node --test tests/integration/`; trên Node 22 lệnh này lỗi `Cannot find module '.../tests/integration'` (không nhận thư mục). Đã đổi thành `node tools/run-tests.mjs integration` (thêm nhóm `integration` vào runner). Chưa chứng minh được test tích hợp đạt vì thiếu Emulator.

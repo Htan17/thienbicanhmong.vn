@@ -1,5 +1,5 @@
 # Hướng dẫn cài đặt và chạy local
-> Gộp từ: docs/guides/LOCAL_DEVELOPMENT.md, docs/guides/LOCAL_DEVELOPMENT.md (13/11/2026, sắp xếp lại thư mục).
+> Tài liệu này là bản gộp từ nhiều file nhỏ (gộp ngày 13/11/2026). Nguồn gốc từng phần được ghi ở tiêu đề mục (vd. `## PRODUCT_OVERVIEW (13/11/2026)`). Các file nhỏ gốc còn nguyên trong ZIP gốc `THIEN_KIEU_BI_CANH_V15_COMMERCIAL_SOURCE.zip`.
 
 ## Cài đặt trên Windows (PowerShell)
 1. Cài Git, Java 11+, Node 22 qua nvm-windows: `nvm install 22 ; nvm use 22 ; node -v` (phải ra v22.x). Không dùng Node 24 cho dự án này.

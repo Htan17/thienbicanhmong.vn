@@ -1,5 +1,5 @@
 # Hiệu năng và chi phí dịch vụ
-> Gộp từ: docs/technical/PERFORMANCE_AND_COST.md, docs/technical/PERFORMANCE_AND_COST.md (13/11/2026, sắp xếp lại thư mục).
+> Tài liệu này là bản gộp từ nhiều file nhỏ (gộp ngày 13/11/2026). Nguồn gốc từng phần được ghi ở tiêu đề mục (vd. `## PRODUCT_OVERVIEW (13/11/2026)`). Các file nhỏ gốc còn nguyên trong ZIP gốc `THIEN_KIEU_BI_CANH_V15_COMMERCIAL_SOURCE.zip`.
 
 ## PERFORMANCE_REPORT (13/11/2026) — KHÔNG có load test; chỉ có số đo tĩnh
 ### Đã đo

@@ -1,3 +1,5 @@
+> **ĐÃ LƯU TRỮ (ARCHIVED) — chỉ để tham khảo lịch sử.** Kiểm toán V14 ngày 12/11/2026; số liệu 134/134 là của lần chạy đó. Tài liệu hiện hành thay thế: `docs/PROJECT_STATUS.md`, `docs/technical/TEST_REPORT.md`. Xem `docs/ARCHIVE_INDEX.md`.
+
 # FULL_SYSTEM_AUDIT — V14 Commercial Edition (phiên 12/11/2026)
 Trạng thái: PASS (có bằng chứng chạy thật) · PARTIAL · FAIL · BLOCKED (thiếu mạng/công cụ) · NOT VERIFIED.
 Môi trường kiểm chứng: Linux sandbox, Node v22.23.4, **không có mạng** (không `npm ci`, không `npm audit`, không firebase-tools), esbuild 0.28.2 có sẵn trong sandbox (không phải bản 0.25 pin trong package.json).

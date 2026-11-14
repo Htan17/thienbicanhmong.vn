@@ -1,5 +1,5 @@
 # Bản quyền, tài sản bên thứ ba và đóng góp của AI
-> Gộp từ: docs/legal/LICENSE_AND_ASSETS.md, docs/legal/LICENSE_AND_ASSETS.md, docs/legal/LICENSE_AND_ASSETS.md (13/11/2026, sắp xếp lại thư mục).
+> Tài liệu này là bản gộp từ nhiều file nhỏ (gộp ngày 13/11/2026). Nguồn gốc từng phần được ghi ở tiêu đề mục (vd. `## PRODUCT_OVERVIEW (13/11/2026)`). Các file nhỏ gốc còn nguyên trong ZIP gốc `THIEN_KIEU_BI_CANH_V15_COMMERCIAL_SOURCE.zip`.
 
 ## Quyền sở hữu & phạm vi chuyển nhượng — BẢN NHÁP, CHƯA XÁC MINH
 Không phải tư vấn pháp lý. Chủ dự án và người mua nên nhờ luật sư xác nhận trước khi giao dịch.
@@ -11,7 +11,7 @@ Không phải tư vấn pháp lý. Chủ dự án và người mua nên nhờ lu
 | Tài nguyên bên thứ ba | Biểu tượng DiceBear (index/boot.js), font/CDN, ảnh, âm thanh | CHƯA kiểm kê; không khẳng định độc quyền |
 | Dữ liệu người dùng thật | Firestore production của người bán | KHÔNG nằm trong gói; chuyển giao chỉ khi có căn cứ pháp lý về dữ liệu cá nhân |
 | Thương hiệu/tên miền/GitHub Pages | `htan17.github.io/thienbicanhmong.vn` | Không chuyển theo gói; người mua tự đặt |
-| Điều khoản phi thương mại | `dieu-khoan.html` (dòng ~28, 34) tuyên bố dự án "phi thương mại", cá nhân, chưa đăng ký; `docs/history/README_V11.md` cũng ghi "phi thương mại". Mô tả `package.json` đã đổi | CHƯA sửa `dieu-khoan.html`/`docs/history/README_V11.md` — người mua phải viết lại điều khoản và chính sách riêng tư theo pháp lý của mình |
+| Điều khoản phi thương mại | `dieu-khoan.html` (dòng ~28, 34) tuyên bố dự án "phi thương mại", cá nhân, chưa đăng ký; `docs/archive/README_V11.md` cũng ghi "phi thương mại". Mô tả `package.json` đã đổi | CHƯA sửa `dieu-khoan.html`/`docs/archive/README_V11.md` — người mua phải viết lại điều khoản và chính sách riêng tư theo pháp lý của mình |
 Không có số liệu doanh thu/người dùng được kiểm chứng trong gói này; không nêu số liệu đó khi chào bán nếu không có bằng chứng.
 
 ## THIRD_PARTY_ASSETS (kết quả quét source 12/11/2026 — QUYỀN THƯƠNG MẠI CHƯA XÁC MINH)

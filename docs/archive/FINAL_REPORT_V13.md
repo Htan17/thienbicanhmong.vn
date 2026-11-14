@@ -1,3 +1,5 @@
+> **ĐÃ LƯU TRỮ (ARCHIVED) — chỉ để tham khảo lịch sử.** Báo cáo trạng thái V13 (WIP); số liệu test và trạng thái đã cũ. Tài liệu hiện hành thay thế: `docs/PROJECT_STATUS.md`, `docs/technical/KNOWN_ISSUES.md`. Xem `docs/ARCHIVE_INDEX.md`.
+
 # FINAL_REPORT — V13 (trạng thái: WIP, CHƯA đạt production-ready)
 
 ## Phân biệt trạng thái

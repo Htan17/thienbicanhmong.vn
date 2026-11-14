@@ -2,7 +2,7 @@
   "name": "thien-kieu-bi-canh",
   "version": "15.0.0-rc.0",
   "private": true,
-  "description": "Thiên Kiêu Bí Cảnh V14 - Commercial Edition (web app học ngoại ngữ qua video, game hoá)",
+  "description": "Thiên Kiêu Bí Cảnh V15 (release candidate) - Commercial Edition (web app học ngoại ngữ qua video, game hoá)",
   "type": "module",
   "scripts": {
     "build": "node tools/build.mjs",
@@ -15,7 +15,7 @@
     "test:frontend": "node tools/run-tests.mjs frontend",
     "test:functions": "node tools/run-tests.mjs functions",
     "test:all": "node tools/run-tests.mjs all",
-    "test:integration": "node --test tests/integration/",
+    "test:integration": "node tools/run-tests.mjs integration",
     "test:rules": "firebase emulators:exec --config firebase.emulator-hardened.json --project demo-tkbc --only firestore \"node tools/run-tests.mjs rules\"",
     "docs:api": "node tools/gen-api-docs.mjs > docs/technical/API_DOCUMENTATION.md",
     "docs:structure": "node tools/analyze-structure.mjs --md > docs/technical/STRUCTURE_REPORT.md",

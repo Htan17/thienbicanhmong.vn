@@ -11,6 +11,13 @@ import { assignImage, removeImage, setPrimary, finalizeQuestions, imageStatus } 
 import { checkLimits, dataUriBytes } from './imageCompressor.js';
 import { parseRawQuizText } from '../lib/helpers.js';
 
+// Các test "còn nguyên" kiểm tra chuỗi nguồn của luồng UI; sau khi tách App.jsx thành app/ + features/ thì phải quét cả cây này.
+const readAppSources = () => {
+    const root = new URL('..', import.meta.url).pathname; const out = [fs.readFileSync(root + 'App.jsx', 'utf8')];
+    const walk = (d) => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = d + '/' + e.name; if (e.isDirectory()) walk(p); else if (/\.jsx?$/.test(e.name) && !/\.test\./.test(e.name)) out.push(fs.readFileSync(p, 'utf8')); } };
+    walk(root + 'app'); walk(root + 'features'); return out.join('\n');
+};
+
 const B64 = (n) => Buffer.from('x'.repeat(n) + Math.random()).toString('base64');
 const IMG = (name, mime = 'image/png', size = 40) => ({ img: name, mime, b64: B64(size) });
 // blocks: chuỗi = đoạn chữ; {img} = ảnh
@@ -93,7 +100,7 @@ test('14-16 single / multi / numeric giữ đúng loại và đáp án khi có �
 test('17 TXT vẫn đi parser cũ, không qua DOCX', () => {
     const t = 'Câu 1: X?\nA. 1\nB. 2\nĐáp án: A\n'; const q = parseRawQuizText(t);
     assert.equal(q.length, 1); assert.equal(q[0].img, undefined);
-    const app = fs.readFileSync(new URL('../App.jsx', import.meta.url), 'utf8');
+    const app = readAppSources();
     assert.match(app, /reader\.readAsText\(file\)/); // nhánh TXT còn nguyên
     assert.match(app, /if \(ext === 'docx'\)/);
 });
@@ -104,11 +111,11 @@ test('18 câu cũ không có img vẫn dùng được như trước', () => {
 test('19 ảnh đi qua startFreshQuiz ({...q}) vào activeQuiz[curIdx].img; App còn đúng chỗ hiển thị', async () => {
     const r = await run([...Q(1, [IMG('a')])]); const f = finalizeQuestions(r.state, id => r.images[0].dataUri)[0];
     const active = { ...f, o: [...f.o], c: f.c }; assert.equal(active.img, f.img);
-    const app = fs.readFileSync(new URL('../App.jsx', import.meta.url), 'utf8');
+    const app = readAppSources();
     assert.match(app, /activeQuiz\[curIdx\]\.img && \(/);
 });
 test('20 phóng to ảnh còn nguyên (ZoomableImage + setLightboxImg)', () => {
-    const app = fs.readFileSync(new URL('../App.jsx', import.meta.url), 'utf8');
+    const app = readAppSources();
     assert.match(app, /setLightboxImg\(activeQuiz\[curIdx\]\.img\)/); assert.match(app, /<ZoomableImage src=\{lightboxImg\}/);
 });
 test('21 không gắn trùng ảnh: mọi thao tác giữ ảnh ở đúng 1 nơi', async () => {

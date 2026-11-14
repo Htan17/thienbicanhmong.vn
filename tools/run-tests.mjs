@@ -1,5 +1,5 @@
 // Chạy test không phụ thuộc shell glob (PowerShell/cmd không tự mở rộng *).
-//   node tools/run-tests.mjs <nhóm...>   nhóm: root | frontend | functions | rules | all
+//   node tools/run-tests.mjs <nhóm...>   nhóm: root | frontend | functions | rules | integration | all
 import { readdirSync, statSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -14,6 +14,7 @@ const groups = {
   frontend: () => walk(path.join(root, 'src'), /\.test\.m?js$/),
   functions: () => walk(path.join(root, 'functions', 'test'), /\.test\.m?js$/),
   rules: () => walk(path.join(root, 'tests', 'rules'), /\.test\.m?js$/),
+  integration: () => walk(path.join(root, 'tests', 'integration'), /\.test\.m?js$/),
 };
 let want = process.argv.slice(2); if (!want.length || want.includes('all')) want = ['root', 'frontend', 'functions'];
 let failed = 0;

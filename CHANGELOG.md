@@ -1,4 +1,11 @@
 # CHANGELOG
+## V15.0.0-rc.0 — đợt dọn dẹp & chuẩn hoá (14/11/2026) — KHÔNG đổi số phiên bản, KHÔNG thêm tính năng
+- Build lại `js/app.min.js` (bản gói gốc lệch `src/`, thiếu các thay đổi client của rc.0); cập nhật `?v=` trong `index.html`. Build bằng esbuild 0.28.2, khác bản pin `^0.25.0`.
+- Sửa `npm run test:integration` (Node 22 không nhận đường dẫn thư mục): dùng `tools/run-tests.mjs integration`.
+- `package.json`: sửa mô tả từ "V14" thành V15 (số phiên bản giữ nguyên `15.0.0-rc.0`). `.gitignore`: thêm file rác OS/editor/coverage.
+- Tài liệu: `docs/history/` chuyển thành `docs/archive/` kèm `docs/ARCHIVE_INDEX.md`; `KNOWN_ISSUES`, `NEXT_TASKS`, `TEST_REPORT`, README viết lại theo trạng thái thực đo; sửa số liệu mâu thuẫn (134/134, 151/151, 90/90, 33/33 → 152 = 11 + 91 + 50 đo lại); sửa dòng "Gộp từ" tự tham chiếu; thêm `PROJECT_STATUS`, `FILE_INVENTORY`, `CLEANUP_REPORT`, `CLEANUP_CHANGELOG`. Không xoá file nào.
+- Chi tiết: `docs/CLEANUP_REPORT.md`, `docs/CLEANUP_CHANGELOG.md`.
+
 ## V15.0.0-rc.0 (12/11/2026) — NOT PRODUCTION READY
 Thay đổi so với V14 gốc (kết hợp phiên Commercial Edition trước):
 - Build tương thích Windows (tools/build.mjs), scripts test/check/emulators thật, Node 22 (.nvmrc, engines, runtime nodejs22).
@@ -21,3 +28,6 @@ Chưa làm: xem docs/commercial/READINESS_AND_ROADMAP.md và NEXT_TASKS.md.
 - Hồ sơ chuyển nhượng Phase 11 (ARCHITECTURE, FEATURE_MATRIX, due diligence, performance, cost, backup, roadmap, overview).
 - Server tự khởi tạo meta/* cho mùa giải; client không còn ghi meta.
 - Sắp xếp lại thư mục: gốc gọn hơn, docs chia nhóm + mục lục, gộp 22 file tài liệu nhỏ thành 8 file, README viết lại, thêm npm run docs:api / docs:structure.
+
+## Modular refactor
+- `src/App.jsx` 4.757 → 268 dòng; tách thành `src/app/` và `src/features/*` (hook + màn hình). Không đổi hành vi, không đổi Rules/Functions. Xem `docs/REFACTOR_REPORT.md`.

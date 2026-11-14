@@ -1,3 +1,5 @@
+> **ĐÃ LƯU TRỮ (ARCHIVED) — chỉ để tham khảo lịch sử.** Mô tả bản V11; còn chứa tuyên bố "phi thương mại" và đường dẫn cũ không còn đúng với V15. Tài liệu hiện hành thay thế: `README.md` (gốc) và `docs/README.md`. Xem `docs/ARCHIVE_INDEX.md`.
+
 # Thiên Kiêu Bí Cảnh
 
 > Web app học ngoại ngữ qua video YouTube, được "game hoá" theo phong cách tu tiên: xem video có phụ đề song ngữ, tra từ, luyện viết chữ Hán, làm bài trắc nghiệm, ôn từ vựng ngắt quãng, thi đua trên bảng xếp hạng và lập môn phái.

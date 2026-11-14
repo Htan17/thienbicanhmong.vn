@@ -1,3 +1,5 @@
+> **ĐÃ LƯU TRỮ (ARCHIVED) — chỉ để tham khảo lịch sử.** Nhật ký kiểm toán V14 (phần 1/2). Tài liệu hiện hành thay thế: `docs/technical/SECURITY_AUDIT.md`, `docs/technical/KNOWN_ISSUES.md`. Xem `docs/ARCHIVE_INDEX.md`.
+
 # Lịch sử kiểm toán V14
 > Gộp từ: docs/history/AUDIT_HISTORY.md, docs/history/AUDIT_HISTORY.md (13/11/2026, sắp xếp lại thư mục).
 

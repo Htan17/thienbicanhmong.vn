@@ -1,16 +1,16 @@
 # Mức sẵn sàng thương mại và lộ trình
-> Gộp từ: docs/commercial/READINESS_AND_ROADMAP.md, docs/commercial/READINESS_AND_ROADMAP.md, docs/commercial/READINESS_AND_ROADMAP.md (13/11/2026, sắp xếp lại thư mục).
+> Tài liệu này là bản gộp từ nhiều file nhỏ (gộp ngày 13/11/2026). Nguồn gốc từng phần được ghi ở tiêu đề mục (vd. `## PRODUCT_OVERVIEW (13/11/2026)`). Các file nhỏ gốc còn nguyên trong ZIP gốc `THIEN_KIEU_BI_CANH_V15_COMMERCIAL_SOURCE.zip`.
 
 ## TECHNICAL_DUE_DILIGENCE (13/11/2026) — dành cho bên nhận chuyển nhượng
 Trạng thái tổng: **NOT PRODUCTION READY**. Tài liệu này chỉ nêu dữ kiện đã đo/đã đọc; không có số liệu doanh thu, người dùng hay định giá.
 
 ### Quy mô
-94 file JS/JSX (≈11.300 dòng; `docs/technical/STRUCTURE_REPORT.md`), 29 hàm server, `App.jsx` ≈4.750 dòng.
+99 file JS/JSX/MJS (≈11.500 dòng; `docs/technical/STRUCTURE_REPORT.md`), 28 hàm server (`functions/index.js`), `App.jsx` 4.757 dòng (đo 14/11/2026).
 
-### Kiểm thử (13/11/2026)
-- Unit (logic thuần): 151/151 đạt (root 11, frontend 91, functions 49).
+### Kiểm thử (chạy lại 14/11/2026, Node 22.23.4, không mạng; chi tiết: `docs/technical/TEST_REPORT.md`)
+- Unit (logic thuần): 152/152 đạt (root 11, frontend 91, functions 50). Số này thay thế các số 151/151, 134/134, 90/90, 33/33 trong tài liệu cũ.
 - Integration (`tests/integration`, 10 test), Firestore Rules test, browser/E2E, responsive, load test: **CHƯA CHẠY**.
-- Build: bundle trong gói là bản cũ; phải chạy `npm run build` (sandbox phát triển không có esbuild/Emulator).
+- Build: bundle `js/app.min.js` của gói gốc LỆCH `src/` (thiếu các thay đổi client của rc.0: joinGuild, rollGacha, equipItem…). Đã build lại 14/11/2026 bằng esbuild 0.28.2 (khác bản pin `^0.25.0`); `build:check` PASS với đúng phiên bản đó. Cần build lại sau khi có lockfile.
 
 ### Rủi ro P0 còn lại
 1. Rules hardened chưa kích hoạt/chưa test; client còn ghi chéo (đã sửa phần kết bạn/mời, chưa chạy thử); Tông môn cũ có thể lưu theo tên (xem `docs/technical/SECURITY_AUDIT.md`).
@@ -26,7 +26,9 @@ Trạng thái tổng: **NOT PRODUCTION READY**. Tài liệu này chỉ nêu dữ
 ### Phụ thuộc người bán
 Đã loại Project ID cũ khỏi cấu hình; còn chuỗi kiểm tra trong `tools/preflight.mjs` và URL GitHub Pages trong tài liệu/lịch sử (xem `docs/legal/LICENSE_AND_ASSETS.md`). Người mua dùng project Firebase riêng (`.firebaserc.example`).
 
-## COMMERCIAL_READINESS_REPORT — V14 (12/11/2026)
+## COMMERCIAL_READINESS_REPORT — V14 (12/11/2026) — BÁO CÁO LỊCH SỬ
+> **Mục này là ảnh chụp ngày 12/11/2026, KHÔNG phải trạng thái hiện hành.** Các số "134/134 (11/90/33)", "28 chỗ client ghi trực tiếp", "13 tài liệu chưa viết", "bundle đồng bộ `src/`" không còn đúng. Số liệu hiện hành: mục TECHNICAL_DUE_DILIGENCE ở trên, `docs/technical/TEST_REPORT.md`, `docs/PROJECT_STATUS.md`. Mức giá nêu bên dưới là mục tiêu kinh doanh của người bán, chưa được kiểm chứng.
+
 ### Kết luận
 | Trạng thái | Kết quả |
 |---|---|

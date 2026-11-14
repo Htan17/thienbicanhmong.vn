@@ -1,9 +1,9 @@
 # Kiểm toán bảo mật (rules, ghi từ client, phụ thuộc)
-> Gộp từ: docs/technical/SECURITY_AUDIT.md, docs/technical/SECURITY_AUDIT.md, docs/technical/SECURITY_AUDIT.md (13/11/2026, sắp xếp lại thư mục).
+> Tài liệu này là bản gộp từ nhiều file nhỏ (gộp ngày 13/11/2026). Nguồn gốc từng phần được ghi ở tiêu đề mục (vd. `## PRODUCT_OVERVIEW (13/11/2026)`). Các file nhỏ gốc còn nguyên trong ZIP gốc `THIEN_KIEU_BI_CANH_V15_COMMERCIAL_SOURCE.zip`.
 
 ## Audit Firestore Rules — Thiên Kiêu Bí Cảnh
 
-Nguồn phân tích: `docs/firestore.rules`, `docs/README.md`, `docs/src/App.jsx`, `lib/srs.js`, `lib/userData.js`, `lib/moderation.js`, `config/gameData.js` trong zip.
+Nguồn phân tích (tên file như ghi trong audit gốc; vị trí hiện tại: `firestore.rules`, `docs/archive/README_V11.md`, `src/App.jsx`): `firestore.rules`, README V11, `src/App.jsx`, `lib/srs.js`, `lib/userData.js`, `lib/moderation.js`, `config/gameData.js` trong zip.
 Trạng thái kiểm chứng: **rules và test CHƯA được chạy** (môi trường không có mạng/emulator). Chỉ kiểm tra cú pháp JS của test và Functions. Phải chạy `npm run test:rules` trước khi tin vào kết quả.
 
 ### 1. Báo cáo lỗ hổng
@@ -80,7 +80,7 @@ Cần gói Blaze; thêm SDK `firebase-functions-compat.js` vào `index.html` và
 
 ### 7. Test
 
-`tests/firestore.rules.test.mjs`: đủ 10 case bị từ chối + 6 case được phép như yêu cầu, cộng các case bổ sung (hồ sơ giàu, xoá hồ sơ, giftCodes, mạo danh friend request, report/hiddenContent, giải tán guild).
+`tests/rules/firestore.rules.test.mjs`: đủ 10 case bị từ chối + 6 case được phép như yêu cầu, cộng các case bổ sung (hồ sơ giàu, xoá hồ sơ, giftCodes, mạo danh friend request, report/hiddenContent, giải tán guild).
 
 ### 8. Lệnh chạy
 

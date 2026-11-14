@@ -1,5 +1,5 @@
-// ĐÂY LÀ FILE RULES DUY NHẤT ĐƯỢC DEPLOY (firebase.json). Hiện là bản V11 TƯƠNG THÍCH CLIENT HIỆN TẠI và CÒN CÁC LỖ HỔNG (xem docs/RULES_AUDIT_REPORT.md).
-// Bản đích an toàn: firestore.rules.hardened. Chỉ chạy `npm run rules:activate-hardened` SAU KHI toàn bộ ghi kinh tế trong docs/CLIENT_WRITE_AUDIT.md đã chuyển sang Cloud Functions.
+// ĐÂY LÀ FILE RULES DUY NHẤT ĐƯỢC DEPLOY (firebase.json). Hiện là bản V11 TƯƠNG THÍCH CLIENT HIỆN TẠI và CÒN CÁC LỖ HỔNG (xem docs/technical/SECURITY_AUDIT.md).
+// Bản đích an toàn: firestore.rules.hardened. Chỉ chạy `npm run rules:activate-hardened` SAU KHI toàn bộ ghi kinh tế trong docs/technical/SECURITY_AUDIT.md đã chuyển sang Cloud Functions.
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {

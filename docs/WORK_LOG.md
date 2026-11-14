@@ -1,7 +1,7 @@
 # WORK_LOG
 ## 2026-11-12 — phiên Commercial Edition (offline sandbox, Node 22)
 1. Giải nén zip gốc (giữ nguyên bản upload làm backup). Không có `.git` trong zip.
-2. Đối chiếu báo cáo cũ với source: xem `docs/history/FULL_SYSTEM_AUDIT.md`. Phát hiện: preflight/make-lockfiles không tồn tại; bundle cũ lệch `src/`; thiếu script test:all/check/emulators.
+2. Đối chiếu báo cáo cũ với source: xem `docs/archive/FULL_SYSTEM_AUDIT_V14.md`. Phát hiện: preflight/make-lockfiles không tồn tại; bundle cũ lệch `src/`; thiếu script test:all/check/emulators.
 3. Build: thêm `tools/build.mjs` (esbuild API, `--check`), `tools/run-tests.mjs`, `tools/preflight.mjs`; sửa scripts `package.json`. Bằng chứng: build + build:check exit 0.
 4. Node: `.nvmrc`=22, engines root/functions, `firebase.json` `runtime: nodejs22`. Nguồn: tài liệu runtime của Google (Node 20 decommission 2026-10-30).
 5. Emulator: `firebase.json` (+hosting, indexes), `firebase.emulator-full.json` (hardened rules), `tools/seed-emulator.mjs` + `tests/fixtures/emulator-seed.json`, `docs/guides/LOCAL_DEVELOPMENT.md`. KHÔNG chạy được.
@@ -50,3 +50,6 @@ Test functions 36/36 PASS. Client chưa build lại (sandbox không có esbuild)
 29. P0 rules hardened: client vẫn tự tạo meta/season, meta/guildSeason, meta/examPathDaily nếu thiếu, còn runCheckpointed của server bỏ qua khi thiếu nextReset => bật rules hardened (meta write:false) sẽ làm mùa giải KHÔNG BAO GIỜ chốt. Đã sửa: runCheckpointed tự khởi tạo nextReset khi thiếu/hỏng (không phát thưởng), client chỉ đọc meta; gỡ 3 import thừa (GUILD_SEASON_DURATION, SEASON_DURATION, getNextExamPathResetTs). Test functions 50/50 (tổng 11 + 91 + 50 = 152). Sau khi triển khai lần đầu, mốc meta xuất hiện sau tối đa 5–30 phút (hoặc chạy functions/scripts/seed-meta-and-gifts.js). CHƯA chạy Emulator.
 
 30. 13/11/2026 — Sắp xếp lại thư mục theo yêu cầu "gọn gàng, ít file nhỏ": thư mục gốc 38 -> 26 mục (chuyển 10 file .md/.v11 và 3 thư mục add-on cũ vào docs/history/); docs/ chia 5 nhóm (guides, technical, commercial, legal, history) + mục lục docs/README.md; gộp 22 file tài liệu nhỏ thành 8 file có tên rõ (dòng đầu mỗi file ghi nguồn gộp); README gốc viết lại (bản cũ còn ghi V14 và "23 test"); sửa mọi tham chiếu (22 file), bỏ mục ignore của thư mục đã chuyển trong firebase.json; thêm .gitignore cho log chạy local; thêm npm run docs:api và docs:structure. Kiểm chứng: 152/152 unit test PASS, preflight không đổi so với trước (chỉ còn thiếu lockfile/node_modules), 0 link .md hỏng, 0 tham chiếu cũ còn sót, API doc khớp bản sinh lại. KHÔNG đổi mã nguồn ứng dụng; bản sao lưu trước khi sắp xếp: V15_backup_before_tidy (ngoài gói zip).
+
+31. 14/11/2026 — Đợt dọn dẹp & chuẩn hoá V15 (xem `docs/CLEANUP_REPORT.md`, `docs/CLEANUP_CHANGELOG.md`). Backup ZIP gốc (SHA-256 `3169f8dd…`). Phát hiện `js/app.min.js` lệch `src/` → build lại (esbuild 0.28.2). Chạy lại: unit 11/91/50 = 152 PASS; check:globals PASS; build:check PASS; preflight 2 FAIL (lockfile); test:rules và test:integration BLOCKED. `docs/history/` → `docs/archive/`. Không xoá file, không deploy, không tạo lockfile (không có mạng).
+

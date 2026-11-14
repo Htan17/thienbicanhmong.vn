@@ -12,3 +12,11 @@ emulators-log.txt
 *-debug.log
 .firebase/
 js/firebase-config.js
+# Rác hệ điều hành / editor / báo cáo phủ
+.DS_Store
+Thumbs.db
+*.log
+*.swp
+*~
+coverage/
+.nyc_output/
