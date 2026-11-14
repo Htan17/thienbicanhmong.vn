@@ -1,0 +1,4 @@
+# PRODUCT_OVERVIEW (13/11/2026)
+**Thiên Kiêu Bí Cảnh** là ứng dụng web học tập theo cơ chế trò chơi, chủ đề tu tiên huyền huyễn: người học làm quiz, ôn thẻ lặp lại (SRS), học qua video, nhập bộ câu hỏi từ DOCX hoặc tạo câu hỏi bằng AI (Gemini, khoá của người dùng), nhận Linh Thạch/Danh Vọng/Cảnh giới, mua vật phẩm và trang bị trong cửa hàng, quay gacha, lập/gia nhập Tông môn, thi đua theo mùa và bảng xếp hạng. Quản trị viên có công cụ kiểm duyệt nội dung và thống kê nghiên cứu.
+Kiến trúc: Firebase (Auth, Firestore, Cloud Functions, Hosting) + frontend React tĩnh. Chi tiết: `ARCHITECTURE.md`, `FEATURE_MATRIX.md`.
+**Mức hoàn thiện: NOT PRODUCTION READY** — xem `TECHNICAL_DUE_DILIGENCE.md` và `COMMERCIAL_ROADMAP.md`. Tài liệu này không đưa số liệu doanh thu, người dùng hay định giá vì chưa có dữ liệu được xác minh.

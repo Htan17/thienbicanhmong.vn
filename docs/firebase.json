@@ -1,0 +1,71 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "runtime": "nodejs22"
+    }
+  ],
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "functions/**",
+      "src/**",
+      "tests/**",
+      "tools/**",
+      "docs/**",
+      "alep-0.1/**",
+      "docx-image-import/**",
+      "quiz-engine-v2/**",
+      "*.md",
+      "*.md.v11",
+      "*.hardened",
+      "*.rules",
+      "*.patch",
+      "*.cjs",
+      "*.sh",
+      "*.example",
+      "*.example.js",
+      "package.json",
+      "package-lock.json",
+      "vite.config.js",
+      "firestore.indexes.json",
+      "firebase.*.json"
+    ]
+  },
+  "emulators": {
+    "auth": {
+      "host": "127.0.0.1",
+      "port": 9099
+    },
+    "functions": {
+      "host": "127.0.0.1",
+      "port": 5001
+    },
+    "firestore": {
+      "host": "127.0.0.1",
+      "port": 8080
+    },
+    "hosting": {
+      "host": "127.0.0.1",
+      "port": 5000
+    },
+    "ui": {
+      "enabled": true,
+      "host": "127.0.0.1",
+      "port": 4000
+    },
+    "singleProjectMode": true,
+    "pubsub": {
+      "host": "127.0.0.1",
+      "port": 8085
+    }
+  }
+}
