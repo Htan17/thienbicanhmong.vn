@@ -1,8 +1,0 @@
-node_modules/
-.env
-.env.*
-!.env.example
-firebase-debug.log
-functions/node_modules/
-serviceAccount*.json
-*.local
