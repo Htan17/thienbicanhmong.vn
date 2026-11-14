@@ -1,0 +1,13 @@
+{
+  "_note": "Dữ liệu MẪU cho Emulator (project demo-tkbc). Không phải dữ liệu người dùng thật. Mật khẩu chỉ dùng local.",
+  "users": [
+    { "uid": "demo_alice", "email": "alice@thienkieu.com", "password": "Demo#12345", "doc": { "name": "alice", "spirit": 1000, "fame": 100, "seasonScore": 0, "seasonLessons": 0, "streakCount": 0, "lastPlayedDate": "", "library": [], "videoNotes": [], "inventory": [], "friends": [], "requests": [], "guild": "Demo Gate", "gameId": "10000001", "lastActive": 1, "photo": "x", "rank": "refining", "bio": "demo" } },
+    { "uid": "demo_bob", "email": "bob@thienkieu.com", "password": "Demo#12345", "doc": { "name": "bob", "spirit": 500, "fame": 50, "seasonScore": 0, "seasonLessons": 0, "streakCount": 0, "lastPlayedDate": "", "library": [], "videoNotes": [], "inventory": [], "friends": [], "requests": [], "guild": null, "gameId": "10000002", "lastActive": 1, "photo": "x", "rank": "refining", "bio": "demo" } },
+    { "uid": "demo_admin", "email": "admin@thienkieu.com", "password": "Demo#12345", "doc": { "name": "admin", "spirit": 0, "fame": 0, "seasonScore": 0, "seasonLessons": 0, "streakCount": 0, "lastPlayedDate": "", "library": [], "videoNotes": [], "inventory": [], "friends": [], "requests": [], "guild": null, "gameId": "10000003", "lastActive": 1, "photo": "x", "rank": "refining", "bio": "demo admin" } }
+  ],
+  "docs": {
+    "guilds/Demo Gate": { "name": "Demo Gate", "level": 1, "members": ["demo_alice"], "leader": "demo_alice", "guildId": "900001", "notice": "demo", "exp": 0 },
+    "meta/season": { "nextReset": 9999999999999 },
+    "admins/demo_admin": {}
+  }
+}

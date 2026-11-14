@@ -1,0 +1,39 @@
+{
+ "beast": {
+  "🐉": 1500,
+  "🐅": 1500,
+  "🦅": 1500,
+  "🐢": 1500
+ },
+ "color": {
+  "#00ffff": 1000,
+  "#ff00ff": 1000,
+  "#22c55e": 1000,
+  "#a855f7": 1000,
+  "#ffdf00": 1000,
+  "#dc2626": 1000,
+  "#b8860b": 1000
+ },
+ "frame": {
+  "luctruc": 2000,
+  "huyetma": 2000,
+  "cuuu": 2000,
+  "chanlong": 2000,
+  "viemde": 2000,
+  "banghan": 2000,
+  "mathan": 2000
+ },
+ "theme": {
+  "theme-blood": 3000,
+  "theme-abyss": 3000,
+  "theme-gold": 3000
+ },
+ "aura": {
+  "guild-aura-sacred": {
+   "spirit": 5000
+  },
+  "guild-aura-rainbow": {
+   "exp": 5000
+  }
+ }
+}
