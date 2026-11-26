@@ -1,7 +1,8 @@
 // TKBC FULL WORKING V16 — Firebase project của người dùng.
 // Không dùng file này trong bản Commercial khi bàn giao cho người mua.
+
 window.TKBC_FIREBASE_CONFIG = {
-  apiKey: "AIzaSyAtnPNb-nGauIQZ0WvCErwF3FiYcleN5bw",
+  apiKey: "AIzaSyA43jai1xVppYd0E14Gn5f1zx89gAbRPQY",
   authDomain: "thienbicanhmong.firebaseapp.com",
   projectId: "thienbicanhmong",
   storageBucket: "thienbicanhmong.firebasestorage.app",
