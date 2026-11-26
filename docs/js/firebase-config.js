@@ -2,7 +2,7 @@
 // Không dùng file này trong bản Commercial khi bàn giao cho người mua.
 
 window.TKBC_FIREBASE_CONFIG = {
-  apiKey: "AIzaSyA43jai1xVppYd0E14Gn5f1zx89gAbRPQY",
+  apiKey: "AIzaSyAtnPNb-nGauIQZOwVcErwF3FiYcIeN5bw",
   authDomain: "thienbicanhmong.firebaseapp.com",
   projectId: "thienbicanhmong",
   storageBucket: "thienbicanhmong.firebasestorage.app",
