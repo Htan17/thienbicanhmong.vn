@@ -14,6 +14,9 @@ export const translateAuthError = (e) => {
     if (code === 'auth/invalid-login-credentials' || code === 'auth/invalid-credential') return 'Đạo hiệu hoặc Mật mã không hợp lệ!';
     if (code === 'auth/operation-not-allowed') return 'Đăng nhập bằng Đạo hiệu/Mật mã hiện đang bị khoá phía máy chủ! Hãy báo cho quản trị viên bật lại mục "Email/Password" trong Firebase Authentication.';
     if (code === 'auth/network-request-failed') return 'Lỗi kết nối mạng! Kiểm tra lại đường truyền.';
+    if (code === 'auth/api-key-not-valid.-please-pass-a-valid-api-key.' || code === 'auth/invalid-api-key') return 'Khoá API Firebase của bản triển khai này không hợp lệ (sai khoá, đã bị xoá, hoặc js/firebase-config.js không được nạp đúng). Hãy báo quản trị viên đối chiếu apiKey với Firebase Console → Project settings → Web app.';
+    if (code === 'auth/unauthorized-domain') return 'Tên miền này chưa được cho phép đăng nhập. Quản trị viên cần thêm vào Firebase Console → Authentication → Settings → Authorized domains.';
+    if (code === 'auth/popup-blocked') return 'Trình duyệt đã chặn cửa sổ đăng nhập. Hãy cho phép popup cho trang này rồi thử lại.';
     if (code === 'auth/too-many-requests') return 'Thử quá nhiều lần! Xin chờ ít phút rồi thử lại.';
     return 'Lỗi: ' + (e?.message || 'Không rõ nguyên nhân');
 };

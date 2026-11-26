@@ -4,6 +4,7 @@
 // Bật Emulator khi: window.TKBC_USE_EMULATORS === true, hoặc (chạy trên localhost/127.0.0.1 VÀ chưa có cấu hình thật),
 // hoặc trên localhost có ?emulator=1. Tắt cưỡng bức: window.TKBC_USE_EMULATORS = false.
 import { FUNCTIONS_REGION } from './functionsConfig.js';
+import { validateFirebaseConfig } from './firebaseConfigCheck.js';
 
 const EMU = { host: '127.0.0.1', auth: 9099, firestore: 8080, functions: 5001 };
 // Bảo vệ khi nạp ngoài trình duyệt (test Node chỉ giả lập biến `firebase`).
@@ -16,9 +17,19 @@ const isNodeTest = typeof window === 'undefined';
 export const USING_EMULATORS = forced === true || (forced !== false && isLocalHost && (!realConfig || /[?&]emulator=1\b/.test(L.search)));
 
 if (!USING_EMULATORS && !realConfig && !isNodeTest) {
-  const msg = 'Thiếu cấu hình Firebase: tạo js/firebase-config.js từ js/firebase-config.example.js (xem docs/guides/DEPLOYMENT_AND_HANDOVER.md).';
+  const msg = 'Thiếu cấu hình Firebase: ' + (W.__tkbcConfigLoadFailed ? 'trình duyệt KHÔNG tải được js/firebase-config.js (404/bị chặn/sai đường dẫn khi deploy). Kiểm tra file đã được commit và deploy cùng app.html.' : 'tạo js/firebase-config.js từ js/firebase-config.example.js') + ' (xem docs/guides/DEPLOYMENT_AND_HANDOVER.md).';
   typeof document !== 'undefined' && document.body && (document.body.innerHTML = '<pre style="color:#ff4500;background:#111;padding:16px;white-space:pre-wrap">' + msg + '</pre>');
   throw new Error(msg);
+}
+// Cấu hình thật có mặt nhưng hỏng (apiKey rỗng/placeholder/sai định dạng): dừng NGAY với thông báo rõ nguyên nhân,
+// thay vì để Google trả về "auth/api-key-not-valid" khó hiểu khi người dùng bấm Đăng nhập.
+if (!USING_EMULATORS && !isNodeTest && W.TKBC_FIREBASE_CONFIG) {
+  const chk = validateFirebaseConfig(W.TKBC_FIREBASE_CONFIG);
+  if (!chk.ok) {
+    const msg = 'Cấu hình Firebase (js/firebase-config.js) không hợp lệ:\n- ' + chk.problems.join('\n- ') + '\nĐối chiếu với Firebase Console → Project settings → Your apps → Web app.';
+    typeof document !== 'undefined' && document.body && (document.body.innerHTML = '<pre style="color:#ff4500;background:#111;padding:16px;white-space:pre-wrap"></pre>', document.body.firstChild.textContent = msg);
+    throw new Error(msg);
+  }
 }
 const firebaseConfig = USING_EMULATORS || !realConfig ? { apiKey: 'demo-api-key', authDomain: 'localhost', projectId: (realConfig && realConfig.projectId) || 'demo-tkbc', appId: 'demo-app' } : realConfig;
 

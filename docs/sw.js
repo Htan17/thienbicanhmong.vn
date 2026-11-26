@@ -3,7 +3,7 @@
  *  - CDN (React, Firebase SDK, Tailwind, font...): dùng bản đã lưu ngay, cập nhật ngầm.
  *  - KHÔNG đụng tới Firestore/Auth/YouTube/API: các yêu cầu đó đi thẳng ra mạng.
  * Muốn buộc mọi máy tải lại bản mới: đổi số VERSION. */
-const VERSION = 'tkbc-v15-shell-2';
+const VERSION = 'tkbc-v16-shell-3';
 const CACHE = VERSION;
 const PRECACHE = ['./', 'index.html', 'app.html', 'css/styles.css', 'js/boot.js', 'js/guard.js'];
 const CDN_HOSTS = ['unpkg.com', 'cdn.jsdelivr.net', 'cdnjs.cloudflare.com', 'cdn.tailwindcss.com', 'fonts.googleapis.com', 'fonts.gstatic.com', 'www.gstatic.com'];

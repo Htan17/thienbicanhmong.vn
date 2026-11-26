@@ -23,7 +23,7 @@
     <link rel="dns-prefetch" href="https://identitytoolkit.googleapis.com">
 
     <script src="js/boot.js"></script>
-    <script src="js/firebase-config.js" onerror="void 0"></script>
+    <script src="js/firebase-config.js" onerror="window.__tkbcConfigLoadFailed=true"></script>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -58,7 +58,7 @@
     <!-- guard.js: kiểm tra thư viện CDN + màn hình ngoại tuyến + service worker. Chỉ nạp app khi thư viện đã sẵn sàng. -->
     <script src="js/guard.js"></script>
     <script>
-        if (window.__tkbcLibsOk) { var s = document.createElement('script'); s.src = 'js/app.min.js?v=59fdcab6ac'; document.body.appendChild(s); }
+        if (window.__tkbcLibsOk) { var s = document.createElement('script'); s.src = 'js/app.min.js?v=d9f91abc19'; document.body.appendChild(s); }
     </script>
 </body>
 </html>

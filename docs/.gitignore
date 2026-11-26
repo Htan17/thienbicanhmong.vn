@@ -11,7 +11,8 @@ serviceAccount*.json
 emulators-log.txt
 *-debug.log
 .firebase/
-js/firebase-config.js
+# js/firebase-config.js KHÔNG ignore ở bản FULL: đây là Web config công khai và PHẢI được deploy cùng app.html (GitHub Pages/Vercel).
+# Bản Commercial phải ignore file này. Hạn chế key bằng HTTP referrer trong Google Cloud Console.
 # Rác hệ điều hành / editor / báo cáo phủ
 .DS_Store
 Thumbs.db
