@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#08080b">
+    <title>Thiên Kiêu Bí Cảnh - Học Ngoại Ngữ Qua Video, Luyện Đề & Ôn Từ Vựng Online</title>
+    <meta name="description" content="Thiên Kiêu Bí Cảnh: web app học ngoại ngữ qua video YouTube (tiếng Trung, Nhật, Hàn, Anh) với phụ đề, Pinyin/Romaji, dịch nghĩa, luyện viết chữ Hán, tạo ải luyện đề trắc nghiệm, ôn từ vựng và bảng xếp hạng.">
+    <meta name="keywords" content="học tiếng Trung qua video, học tiếng Nhật, học ngoại ngữ qua YouTube, luyện đề trắc nghiệm online, ôn từ vựng, luyện viết chữ Hán, Pinyin, Romaji, Thiên Kiêu Bí Cảnh">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <link rel="canonical" href="https://htan17.github.io/thienbicanhmong.vn/">
+    <meta property="og:url" content="https://htan17.github.io/thienbicanhmong.vn/">
+    <meta name="application-name" content="Thiên Kiêu Bí Cảnh">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Thiên Kiêu Bí Cảnh">
+    <meta property="og:title" content="Thiên Kiêu Bí Cảnh - Học Ngoại Ngữ Qua Video & Luyện Đề">
+    <meta property="og:description" content="Học tiếng Trung, Nhật, Hàn, Anh qua video YouTube có phụ đề, phiên âm, dịch nghĩa; luyện đề trắc nghiệm và ôn từ vựng như chơi game.">
+    <meta property="og:locale" content="vi_VN">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Thiên Kiêu Bí Cảnh - Học Ngoại Ngữ Qua Video & Luyện Đề">
+    <meta name="twitter:description" content="Học ngoại ngữ qua video, luyện đề trắc nghiệm, ôn từ vựng và luyện viết chữ Hán.">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Thiên Kiêu Bí Cảnh","url":"https://htan17.github.io/thienbicanhmong.vn/","alternateName":"Thien Kieu Bi Canh","applicationCategory":"EducationalApplication","operatingSystem":"Any (Web, Windows, macOS, Android, iOS)","inLanguage":"vi","description":"Web app học ngoại ngữ qua video YouTube, luyện đề trắc nghiệm, ôn từ vựng và luyện viết chữ Hán.","offers":{"@type":"Offer","price":"0","priceCurrency":"VND"}}</script>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23111'/%3E%3Cpath d='M20 14h26v36H22a4 4 0 0 1-4-4V16a2 2 0 0 1 2-2z' fill='none' stroke='%23eab308' stroke-width='4' stroke-linejoin='round'/%3E%3Cpath d='M29 25l11 7-11 7z' fill='%23eab308'/%3E%3C/svg%3E">
+    <!-- Tải trước trang app để bấm "Bắt đầu" là vào gần như ngay. Trang này KHÔNG phụ thuộc CDN nào (chỉ font tuỳ chọn, có dự phòng). -->
+    <link rel="prefetch" href="app.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #08080b; --bg2: #101015; --card: #14141a; --line: #26262e;
+            --text: #f4f4f5; --muted: #a1a1aa; --gold: #eab308; --gold2: #facc15; --on-gold: #111;
+            --glow: rgba(234, 179, 8, .16);
+            --radius: 16px;
+        }
+        @media (prefers-color-scheme: light) {
+            :root { --bg: #fafaf7; --bg2: #f1f0ea; --card: #ffffff; --line: #e4e2d9; --text: #18181b; --muted: #52525b; --gold: #b45309; --gold2: #92400e; --on-gold: #fff; --glow: rgba(180, 83, 9, .12); }
+        }
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif; line-height: 1.6; -webkit-font-smoothing: antialiased; padding-bottom: env(safe-area-inset-bottom, 0); }
+        a { color: inherit; }
+        .wrap { width: min(1080px, 100% - 40px); margin-inline: auto; }
+        .brand { font-family: "Playfair Display", Georgia, "Times New Roman", serif; font-style: italic; font-weight: 700; letter-spacing: .01em; }
+
+        /* THANH ĐẦU TRANG */
+        header { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top, 0); }
+        .nav { display: flex; align-items: center; justify-content: space-between; height: 62px; gap: 12px; }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-size: 20px; color: var(--gold); }
+        .logo svg { flex: none; }
+        .nav-links { display: flex; align-items: center; gap: 22px; font-size: 14px; color: var(--muted); }
+        .nav-links a { text-decoration: none; }
+        .nav-links a:hover { color: var(--text); }
+        @media (max-width: 720px) { .nav-links .lnk { display: none; } }
+
+        /* NÚT */
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 13px 26px; font-weight: 800; font-size: 15px; text-decoration: none; border: 1px solid transparent; cursor: pointer; transition: transform .15s ease, box-shadow .15s ease, background .15s ease; }
+        .btn-gold { background: linear-gradient(180deg, var(--gold2), var(--gold)); color: var(--on-gold); box-shadow: 0 8px 28px var(--glow), inset 0 1px 0 rgba(255,255,255,.35); }
+        .nav-links a.btn-gold { color: var(--on-gold); }
+        .btn-gold:hover { transform: translateY(-1px); box-shadow: 0 12px 34px var(--glow); }
+        .btn-gold:active { transform: translateY(0); }
+        .btn-ghost { background: transparent; color: var(--text); border-color: var(--line); }
+        .btn-ghost:hover { background: var(--bg2); }
+        .btn-sm { padding: 9px 18px; font-size: 13px; border-radius: 10px; }
+        .btn:focus-visible, a:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+        /* HERO */
+        .hero { position: relative; overflow: hidden; padding: 64px 0 72px; }
+        .hero::before { content: ""; position: absolute; inset: -20% -10% auto -10%; height: 90%; background: radial-gradient(ellipse at 50% 0%, var(--glow), transparent 62%); pointer-events: none; }
+        .hero-grid { position: relative; display: grid; grid-template-columns: 1.05fr .95fr; gap: 48px; align-items: center; }
+        @media (max-width: 880px) { .hero { padding: 40px 0 52px; } .hero-grid { grid-template-columns: 1fr; gap: 36px; } }
+        .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--line); background: var(--card); padding: 6px 12px; border-radius: 999px; }
+        h1 { font-size: clamp(32px, 5.4vw, 54px); line-height: 1.12; margin: 18px 0 16px; letter-spacing: -.02em; font-weight: 900; }
+        h1 em { font-style: normal; color: var(--gold); }
+        .lead { font-size: clamp(16px, 2vw, 19px); color: var(--muted); max-width: 52ch; margin: 0 0 28px; }
+        .cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
+        .langs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+        .chip { display: inline-flex; align-items: baseline; gap: 6px; font-size: 13px; padding: 5px 12px; border-radius: 999px; background: var(--card); border: 1px solid var(--line); color: var(--muted); }
+        .chip b { color: var(--text); font-weight: 700; }
+        .hint { margin-top: 14px; font-size: 13px; color: var(--muted); }
+
+        /* KHUNG MINH HOẠ GIAO DIỆN HỌC VIDEO (thuần CSS, không ảnh ngoài) */
+        .mock { position: relative; border: 1px solid var(--line); background: var(--card); border-radius: 20px; padding: 14px; box-shadow: 0 30px 80px -30px rgba(0,0,0,.55); }
+        .mock-video { position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: linear-gradient(135deg, #1e1b4b, #312e81 45%, #7c2d12); display: flex; align-items: center; justify-content: center; }
+        .mock-video::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 70% 25%, rgba(250,204,21,.28), transparent 45%); }
+        .play { position: relative; z-index: 1; width: 58px; height: 58px; border-radius: 50%; background: rgba(0,0,0,.45); border: 2px solid rgba(255,255,255,.75); display: flex; align-items: center; justify-content: center; }
+        .play::after { content: ""; margin-left: 4px; border-left: 17px solid #fff; border-top: 11px solid transparent; border-bottom: 11px solid transparent; }
+        .progress { position: absolute; left: 12px; right: 12px; bottom: 10px; height: 4px; border-radius: 4px; background: rgba(255,255,255,.28); z-index: 1; }
+        .progress i { display: block; width: 38%; height: 100%; border-radius: 4px; background: #facc15; }
+        .sub { margin-top: 12px; padding: 14px 16px; border-radius: 12px; background: var(--bg2); border: 1px solid var(--line); }
+        .sub .zh { font-size: 24px; font-weight: 700; letter-spacing: .04em; }
+        .sub .py { font-size: 14px; color: var(--gold); margin-top: 2px; }
+        .sub .vi { font-size: 14px; color: var(--muted); margin-top: 6px; }
+        .sub .tap { display: inline-block; border-bottom: 2px dashed var(--gold); }
+        .mock-tags { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+        .tag { font-size: 12px; padding: 4px 10px; border-radius: 8px; background: var(--bg2); border: 1px solid var(--line); color: var(--muted); }
+        .mock-note { margin: 10px 4px 0; font-size: 11px; color: var(--muted); text-align: right; }
+
+        /* KHỐI NỘI DUNG */
+        section { padding: 64px 0; }
+        .alt { background: var(--bg2); border-block: 1px solid var(--line); }
+        .sec-head { max-width: 640px; margin-bottom: 36px; }
+        h2 { font-size: clamp(26px, 3.6vw, 36px); line-height: 1.2; margin: 0 0 10px; letter-spacing: -.01em; font-weight: 900; }
+        .sec-head p { margin: 0; color: var(--muted); font-size: 16px; }
+        .grid { display: grid; gap: 16px; grid-template-columns: repeat(3, 1fr); }
+        @media (max-width: 880px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+        .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; transition: border-color .2s ease, transform .2s ease; }
+        .card:hover { border-color: color-mix(in srgb, var(--gold) 55%, var(--line)); transform: translateY(-2px); }
+        .ico { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: var(--bg2); border: 1px solid var(--line); color: var(--gold); margin-bottom: 14px; }
+        .card h3 { margin: 0 0 6px; font-size: 17px; font-weight: 800; }
+        .card p { margin: 0; color: var(--muted); font-size: 14.5px; }
+
+        .steps { counter-reset: s; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 0; margin: 0; list-style: none; }
+        @media (max-width: 760px) { .steps { grid-template-columns: 1fr; } }
+        .steps li { counter-increment: s; position: relative; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px 22px 22px; }
+        .steps li::before { content: counter(s); display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; background: var(--gold); color: var(--on-gold); font-weight: 900; margin-bottom: 12px; }
+        .steps h3 { margin: 0 0 4px; font-size: 17px; }
+        .steps p { margin: 0; color: var(--muted); font-size: 14.5px; }
+
+        .final { text-align: center; padding: 72px 0; position: relative; overflow: hidden; }
+        .final::before { content: ""; position: absolute; inset: auto -10% -40% -10%; height: 90%; background: radial-gradient(ellipse at 50% 100%, var(--glow), transparent 62%); pointer-events: none; }
+        .final .wrap { position: relative; }
+        .final p { color: var(--muted); max-width: 52ch; margin: 0 auto 26px; }
+
+        footer { border-top: 1px solid var(--line); padding: 26px 0 34px; font-size: 13px; color: var(--muted); }
+        .foot { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; align-items: center; }
+        .foot nav { display: flex; gap: 20px; }
+        .foot a { text-decoration: none; }
+        .foot a:hover { color: var(--text); text-decoration: underline; }
+
+        @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn, .card { transition: none; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="wrap nav">
+            <a class="logo brand" href="./" aria-label="Thiên Kiêu Bí Cảnh - trang chủ">
+                <svg width="30" height="30" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="var(--card)" stroke="var(--line)"/><path d="M20 14h26v36H22a4 4 0 0 1-4-4V16a2 2 0 0 1 2-2z" fill="none" stroke="var(--gold)" stroke-width="4" stroke-linejoin="round"/><path d="M29 25l11 7-11 7z" fill="var(--gold)"/></svg>
+                Thiên Kiêu Bí Cảnh
+            </a>
+            <nav class="nav-links" aria-label="Điều hướng">
+                <a class="lnk" href="#tinh-nang">Tính năng</a>
+                <a class="lnk" href="#cach-hoc">Cách học</a>
+                <a class="btn btn-gold btn-sm" href="app.html">Bắt đầu</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="wrap hero-grid">
+                <div>
+                    <span class="eyebrow">Học ngoại ngữ qua video</span>
+                    <h1 id="hero-title">Học ngoại ngữ từ video bạn thích, <em>nhớ lâu như chơi game</em></h1>
+                    <p class="lead">Xem video YouTube kèm phụ đề, phiên âm và dịch nghĩa từng câu. Bấm vào từ để tra, luyện viết chữ Hán, làm đề trắc nghiệm và ôn từ vựng đúng lúc sắp quên.</p>
+                    <div class="cta-row">
+                        <a class="btn btn-gold" href="app.html">Bắt đầu học ngay →</a>
+                        <a class="btn btn-ghost" href="#tinh-nang">Xem tính năng</a>
+                    </div>
+                    <p class="hint">Dùng ngay trên trình duyệt điện thoại hoặc máy tính, không cần cài đặt.</p>
+                    <div class="langs" aria-label="Ngôn ngữ hỗ trợ">
+                        <span class="chip"><b>中文</b> Tiếng Trung</span>
+                        <span class="chip"><b>日本語</b> Tiếng Nhật</span>
+                        <span class="chip"><b>한국어</b> Tiếng Hàn</span>
+                        <span class="chip"><b>EN</b> Tiếng Anh</span>
+                    </div>
+                </div>
+
+                <div aria-hidden="true">
+                    <div class="mock">
+                        <div class="mock-video"><div class="play"></div><div class="progress"><i></i></div></div>
+                        <div class="sub">
+                            <div class="zh">你好，<span class="tap">很高兴</span>认识你</div>
+                            <div class="py">Nǐ hǎo, hěn gāoxìng rènshi nǐ</div>
+                            <div class="vi">Xin chào, rất vui được làm quen với bạn</div>
+                        </div>
+                        <div class="mock-tags"><span class="tag">Phụ đề</span><span class="tag">Pinyin</span><span class="tag">Dịch nghĩa</span><span class="tag">Tra từ</span></div>
+                        <p class="mock-note">Hình minh hoạ giao diện</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tinh-nang" class="alt" aria-labelledby="feat-title">
+            <div class="wrap">
+                <div class="sec-head">
+                    <h2 id="feat-title">Mọi thứ bạn cần để học đều đặn</h2>
+                    <p>Từ xem video, ghi nhớ từ vựng đến luyện đề, gói gọn trong một ứng dụng.</p>
+                </div>
+                <div class="grid">
+                    <article class="card">
+                        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10.5 9.5l4 2.5-4 2.5z" fill="currentColor" stroke="none"/></svg></div>
+                        <h3>Học qua video</h3>
+                        <p>Dán link YouTube, xem kèm phụ đề, phiên âm (Pinyin/Romaji) và dịch nghĩa từng câu. Lưu câu hay vào sổ ghi chú.</p>
+                    </article>
+                    <article class="card">
+                        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l4.5-1 10-10a2.1 2.1 0 0 0-3-3l-10 10z"/><path d="M13.5 7.5l3 3"/></svg></div>
+                        <h3>Luyện viết chữ Hán</h3>
+                        <p>Viết theo đúng thứ tự nét, ứng dụng chấm từng nét và có hoạt ảnh mẫu để bạn làm theo.</p>
+                    </article>
+                    <article class="card">
+                        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l2 2 4-4"/><rect x="4" y="3.5" width="16" height="17" rx="3"/></svg></div>
+                        <h3>Luyện đề trắc nghiệm</h3>
+                        <p>Tạo bộ đề của riêng bạn, nhập nhanh từ file Word, làm bài và xem kết quả ngay sau mỗi lượt.</p>
+                    </article>
+                    <article class="card">
+                        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 8v4l3 2"/></svg></div>
+                        <h3>Ôn từ vựng đúng lúc</h3>
+                        <p>Thẻ ôn lặp lại ngắt quãng nhắc bạn ôn trước khi quên, giúp nhớ lâu mà không phải học dồn.</p>
+                    </article>
+                    <article class="card">
+                        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.4L12 15l-1.8-4.6L5.5 9l4.7-1.4z"/><path d="M18.5 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg></div>
+                        <h3>Trợ lý AI</h3>
+                        <p>Tạo câu hỏi và giải thích nhanh bằng AI Gemini, dùng khoá API của chính bạn nên bạn chủ động chi phí.</p>
+                    </article>
+                    <article class="card">
+                        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3"/><path d="M7 5H4v2a3 3 0 0 0 3 3"/></svg></div>
+                        <h3>Giữ động lực mỗi ngày</h3>
+                        <p>Chuỗi ngày học, thành tích, bảng xếp hạng và nhóm học tập giúp bạn duy trì thói quen.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="cach-hoc" aria-labelledby="how-title">
+            <div class="wrap">
+                <div class="sec-head">
+                    <h2 id="how-title">Bắt đầu chỉ với 3 bước</h2>
+                    <p>Không cần chuẩn bị gì nhiều, vào học trong vài phút.</p>
+                </div>
+                <ol class="steps">
+                    <li><h3>Tạo tài khoản</h3><p>Đăng ký nhanh để lưu tiến độ và đồng bộ giữa điện thoại với máy tính.</p></li>
+                    <li><h3>Chọn nội dung</h3><p>Mở một video bạn thích hoặc chọn bộ đề từ thư viện để làm quen.</p></li>
+                    <li><h3>Học và theo dõi</h3><p>Ôn từ vựng mỗi ngày, làm đề, xem tiến bộ của mình tăng dần.</p></li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="final alt" aria-labelledby="cta-title">
+            <div class="wrap">
+                <h2 id="cta-title">Sẵn sàng bắt đầu buổi học đầu tiên?</h2>
+                <p>Mở ứng dụng và học ngay hôm nay. Mỗi ngày một chút, tiến bộ sẽ thấy rõ.</p>
+                <a class="btn btn-gold" href="app.html">Bắt đầu →</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="wrap foot">
+            <span>© Thiên Kiêu Bí Cảnh · Bản dựng REV7</span>
+            <nav aria-label="Liên kết chân trang"><a href="dieu-khoan.html">Điều khoản sử dụng</a><a href="app.html">Mở ứng dụng</a></nav>
+        </div>
+    </footer>
+</body>
+</html>
