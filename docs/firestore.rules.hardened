@@ -1,0 +1,368 @@
+rules_version = '2';
+// =============================================================================
+// firestore.rules.hardened  —  deny-by-default
+// NGUYÊN TẮC: client chỉ ghi dữ liệu "trình bày"/nội dung cá nhân; MỌI thứ liên quan tiền tệ,
+// điểm, bảng xếp hạng, danh hiệu, EXP tông môn, mùa giải đều CHỈ do Cloud Functions (Admin SDK,
+// bỏ qua rules) ghi. KHÔNG triển khai production trước khi các Cloud Functions tương ứng chạy
+// (xem AUDIT_REPORT.md mục 5-6), nếu không các tính năng thưởng/mua sắm sẽ bị permission-denied.
+// =============================================================================
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ------------------------------ helpers cơ bản ------------------------------
+    function signedIn() { return request.auth != null; }
+    function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+    // Admin = tồn tại admins/{uid} (chỉ tạo bằng Console/Admin SDK; không client nào ghi được)
+    function isAdmin() { return signedIn() && (request.auth.token.get('admin', false) == true || exists(/databases/$(database)/documents/admins/$(request.auth.uid))); }
+    function isHidden(key) { return exists(/databases/$(database)/documents/hiddenContent/$(key)); }
+    function userPath(uid) { return /databases/$(database)/documents/users/$(uid); }
+    function guildPath(gid) { return /databases/$(database)/documents/guilds/$(gid); }
+
+    // Các key bị thay đổi trong một update (chỉ dùng trong allow update)
+    function changedKeys() { return request.resource.data.diff(resource.data).affectedKeys(); }
+    function touched(k) { return changedKeys().hasAny([k]); }
+
+    function isStr(v, max) { return v is string && v.size() <= max; }
+    function isEmptyList(v) { return v is list && v.size() == 0; }
+
+    // ------------------------------ users/{uid} ------------------------------
+    // NHÓM 1 (client tự sửa an toàn) — whitelist DUY NHẤT; key nào ngoài danh sách này đều bị chặn.
+    function clientProfileKeys() {
+      return ['photo', 'bgImage', 'bio', 'theme', 'uiMode', 'appTheme', 'aura', 'frame', 'nameFrame',
+              'nameColor', 'sfxPack', 'examPathActiveTitle', 'lastActive',
+              'library', 'videoNotes', 'examPath', 'examPathSaves', 'studySeconds'];
+    }
+
+    // Hồ sơ khởi tạo: giá trị khởi điểm BẮT BUỘC đúng (500 LT, 100 DV, mọi điểm = 0...). Tự tạo hồ sơ
+    // với spirit/fame tuỳ ý bị chặn. Không cho xoá hồ sơ (xem allow delete) nên không thể "xoá rồi tạo lại để reset".
+    function validNewUser(d) {
+      return d.keys().hasOnly(['name', 'spirit', 'fame', 'seasonScore', 'seasonLessons', 'streakCount',
+                               'lastPlayedDate', 'library', 'videoNotes', 'inventory', 'friends', 'requests',
+                               'guild', 'gameId', 'lastActive', 'photo', 'rank', 'bio'])
+        && d.keys().hasAll(['name', 'spirit', 'fame', 'photo', 'rank', 'bio'])
+        && d.name is string && d.name.matches('[a-z0-9]{1,30}')
+        && d.spirit == 500 && d.fame == 100
+        && d.get('seasonScore', 0) == 0 && d.get('seasonLessons', 0) == 0
+        && d.get('streakCount', 0) == 0 && d.get('lastPlayedDate', '') == ''
+        && isEmptyList(d.get('library', [])) && isEmptyList(d.get('videoNotes', []))
+        && isEmptyList(d.get('inventory', [])) && isEmptyList(d.get('friends', []))
+        && isEmptyList(d.get('requests', []))
+        && d.get('guild', null) == null
+        && d.rank == 'refining'
+        && isStr(d.photo, 350000) && isStr(d.bio, 100)
+        && d.get('gameId', '00000000') is string && d.get('gameId', '00000000').matches('[0-9]{8}')
+        && d.get('lastActive', 0) is number;
+    }
+
+    // Chủ tài khoản sửa hồ sơ: chỉ các key trong whitelist, và MỖI key đổi đều được kiểm tra kiểu/giới hạn.
+    function userCanEditProfile() {
+      let n = request.resource.data;
+      return changedKeys().hasOnly(clientProfileKeys())
+        && (!touched('photo') || isStr(n.photo, 350000))
+        && (!touched('bgImage') || isStr(n.bgImage, 350000))
+        && (!touched('bio') || isStr(n.bio, 100))
+        && (!touched('theme') || isStr(n.theme, 16))
+        && (!touched('uiMode') || isStr(n.uiMode, 16))
+        // Trang bị (khung, khung tên, màu tên, hào quang, giao diện, gói âm thanh): CHỈ được THÁO (chuỗi rỗng) từ client.
+        // Trang bị vật phẩm đi qua Cloud Function equipItem (kiểm tra sở hữu + giá trị hợp lệ).
+        && (!touched('appTheme') || n.appTheme == '')
+        && (!touched('aura') || n.aura == '')
+        && (!touched('nameColor') || n.nameColor == '')
+        && (!touched('sfxPack') || n.sfxPack == '')
+        && (!touched('frame') || n.frame == '')
+        && (!touched('nameFrame') || n.nameFrame == '')
+        // Danh hiệu đang đeo phải nằm trong examPathTitles (do server trao)
+        && (!touched('examPathActiveTitle') || n.examPathActiveTitle == '' || n.examPathActiveTitle == null
+            || n.examPathActiveTitle in resource.data.get('examPathTitles', []))
+        && (!touched('lastActive') || n.lastActive is number)
+        && (!touched('library') || (n.get('library', []) is list && n.get('library', []).size() <= 300))
+        && (!touched('videoNotes') || (n.get('videoNotes', []) is list && n.get('videoNotes', []).size() <= 300))
+        && (!touched('examPath') || n.get('examPath', {}) is map)
+        && (!touched('examPathSaves') || (n.get('examPathSaves', []) is list && n.get('examPathSaves', []).size() <= 10))
+        // studySeconds: thống kê, chỉ tăng, tối đa 6 giờ mỗi lần ghi (TODO: xác nhận không dùng cho bảng xếp hạng)
+        && (!touched('studySeconds') || (n.studySeconds is number
+            && n.studySeconds >= resource.data.get('studySeconds', 0)
+            && n.studySeconds - resource.data.get('studySeconds', 0) <= 21600));
+    }
+
+    // Tự gán gameId đúng 1 lần cho hồ sơ cũ chưa có
+    function userSetGameId() {
+      return changedKeys().hasOnly(['gameId'])
+        && !('gameId' in resource.data)
+        && request.resource.data.gameId is string
+        && request.resource.data.gameId.matches('[0-9]{8}');
+    }
+
+    // Tự chữa hồ sơ "rỗng" cũ (không có name): chỉ được về ĐÚNG giá trị khởi điểm. Hồ sơ thật luôn có name nên
+    // nhánh này không thể dùng để reset tài khoản đang chơi.
+    function userHealStub() {
+      return !('name' in resource.data) && validNewUser(request.resource.data);
+    }
+
+    // Trường users.guild phía chủ tài khoản: tên tông môn phải khớp với members của tông môn đó (getAfter => đúng cả khi batch)
+    function guildHasMemberAfter(gname, uid) {
+      return existsAfter(guildPath(gname)) && (uid in getAfter(guildPath(gname)).data.get('members', []));
+    }
+    function userGuildSelf(uid) {
+      let n = request.resource.data;
+      let old = resource.data.get('guild', null);
+      return changedKeys().hasOnly(['guild'])
+        && (
+          // Rời/được dọn: guild = null, và tông môn cũ không còn tồn tại hoặc không còn liệt kê mình
+          (n.guild == null && old is string && !guildHasMemberAfter(old, uid))
+          // Gia nhập: đang không ở tông môn nào và members đã chứa uid
+          || (n.guild is string && n.guild.size() > 0 && n.guild.size() <= 60 && !n.guild.matches('.*/.*')
+              && old == null && guildHasMemberAfter(n.guild, uid))
+        );
+    }
+    // Bang chủ trục xuất / giải tán: chỉ đặt guild = null cho người ĐÃ không còn trong members (hoặc tông môn đã bị xoá cùng batch)
+    function userGuildKickedByLeader(uid) {
+      let old = resource.data.get('guild', null);
+      return signedIn()
+        && changedKeys().hasOnly(['guild'])
+        && request.resource.data.guild == null
+        && old is string && old.size() <= 60 && !old.matches('.*/.*')
+        && exists(guildPath(old))
+        && get(guildPath(old)).data.leader == request.auth.uid
+        && !guildHasMemberAfter(old, uid);
+    }
+
+    match /users/{uid} {
+      // Giữ nguyên hiện trạng: bảng xếp hạng cần đọc toàn bộ. (Rủi ro riêng tư: xem AUDIT_REPORT mục 1 #12)
+      allow read: if signedIn();
+      allow create: if isOwner(uid) && validNewUser(request.resource.data);
+      allow update: if isOwner(uid) && (userCanEditProfile() || userSetGameId() || userHealStub() || userGuildSelf(uid))
+                    || userGuildKickedByLeader(uid);
+      // Không cho xoá hồ sơ từ client (xoá -> tạo lại sẽ reset usedCodes, điểm mùa...). Xoá tài khoản = Cloud Function.
+      allow delete: if false;
+
+      // Khoá Gemini + mọi thứ riêng tư: CHỈ chính chủ. Server TUYỆT ĐỐI không tin dữ liệu ở đây để tính thưởng.
+      match /private/{docId} {
+        allow read: if isOwner(uid);
+        allow write: if isOwner(uid)
+          && (docId != 'settings' || (
+               request.resource.data.keys().size() <= 20
+               && request.resource.data.get('geminiApiKey', '') is string && request.resource.data.get('geminiApiKey', '').size() <= 512
+               && request.resource.data.get('geminiApiKey2', '') is string && request.resource.data.get('geminiApiKey2', '').size() <= 512));
+      }
+
+      // SRS: chỉ chủ tài khoản (dữ liệu ôn tập cá nhân, không mang thưởng; thưởng SRS đi qua Cloud Function)
+      match /srs/{docId} {
+        allow read, write: if isOwner(uid);
+      }
+
+      // ---- Lời mời kết bạn (thay cho mảng requests): doc id = UID người gửi => mỗi người gửi tối đa 1 lời mời,
+      //      không thể sửa/xoá lời mời của người khác, không thể ghi đè cả danh sách ----
+      match /friendRequests/{fromUid} {
+        allow get: if isOwner(uid) || isOwner(fromUid);
+        allow list: if isOwner(uid);
+        allow create: if isOwner(fromUid) && uid != fromUid
+          && exists(userPath(uid))
+          && !exists(/databases/$(database)/documents/users/$(uid)/friends/$(fromUid))
+          && request.resource.data.keys().hasOnly(['fromUid', 'fromName', 'type', 'createdAt'])
+          && request.resource.data.keys().hasAll(['fromUid', 'fromName', 'type', 'createdAt'])
+          && request.resource.data.fromUid == request.auth.uid
+          && request.resource.data.type == 'friend'
+          // tên người gửi phải đúng với hồ sơ thật (không mạo danh)
+          && request.resource.data.fromName == get(userPath(request.auth.uid)).data.name
+          && request.resource.data.createdAt == request.time;
+        allow update: if false;
+        // Người nhận từ chối/chấp nhận (xoá) hoặc người gửi huỷ
+        allow delete: if isOwner(uid) || isOwner(fromUid);
+      }
+
+      // ---- Danh sách bạn (thay cho mảng friends). Một bản ghi chỉ tạo được khi người NHẬN đang giữ lời mời của
+      //      người gửi (exists chạy trên trạng thái trước batch nên batch "tạo 2 bên + xoá lời mời" hợp lệ) ----
+      match /friends/{friendUid} {
+        allow read: if signedIn();
+        allow create: if request.resource.data.keys().hasOnly(['since'])
+          && request.resource.data.since == request.time
+          && uid != friendUid
+          && (
+            // Bên người chấp nhận ghi bản ghi của chính mình
+            (isOwner(uid) && exists(/databases/$(database)/documents/users/$(uid)/friendRequests/$(friendUid)))
+            // Người chấp nhận ghi bản ghi đối xứng vào hồ sơ người gửi (người gửi = uid, người chấp nhận = friendUid = auth.uid)
+            || (isOwner(friendUid) && exists(/databases/$(database)/documents/users/$(friendUid)/friendRequests/$(uid)))
+          );
+        allow update: if false;
+        // Huỷ kết bạn: một trong hai bên
+        allow delete: if isOwner(uid) || isOwner(friendUid);
+      }
+
+      // ---- Lời mời vào tông môn: chỉ bang chủ của tông môn đó gửi ----
+      match /guildInvites/{gid} {
+        allow get: if isOwner(uid) || (signedIn() && exists(guildPath(gid)) && get(guildPath(gid)).data.leader == request.auth.uid);
+        allow list: if isOwner(uid);
+        allow create: if signedIn() && exists(guildPath(gid))
+          && get(guildPath(gid)).data.leader == request.auth.uid
+          && request.resource.data.keys().hasOnly(['fromUid', 'fromName', 'guildId', 'createdAt'])
+          && request.resource.data.keys().hasAll(['fromUid', 'fromName', 'guildId', 'createdAt'])
+          && request.resource.data.fromUid == request.auth.uid
+          && request.resource.data.guildId == gid
+          && request.resource.data.fromName == get(userPath(request.auth.uid)).data.name
+          && request.resource.data.createdAt == request.time;
+        allow update: if false;
+        allow delete: if isOwner(uid) || (signedIn() && exists(guildPath(gid)) && get(guildPath(gid)).data.leader == request.auth.uid);
+      }
+    }
+
+    // ------------------------------ guilds/{gid} (Tông Môn) ------------------------------
+    // Doc id = tên tông môn (như code hiện tại). members = mảng UID.
+    // Client KHÔNG tạo guild (phí 500 LT => Cloud Function createGuild), không sửa exp/level/perk/leader tuỳ ý.
+    function guildMembersOld() { return resource.data.get('members', []); }
+    function guildMembersNew() { return request.resource.data.get('members', []); }
+
+    // Bang chủ sửa cáo thị (chỉ field notice)
+    function guildLeaderNotice() {
+      return signedIn() && resource.data.leader == request.auth.uid
+        && changedKeys().hasOnly(['notice'])
+        && isStr(request.resource.data.notice, 200);
+    }
+    // Tự gia nhập: thêm ĐÚNG UID của mình (không ai khác), chưa có trong members, còn chỗ (level*5), đang không ở guild nào.
+    function guildSelfJoin() {
+      let o = guildMembersOld();
+      let n = guildMembersNew();
+      let me = request.auth.uid;
+      return signedIn()
+        && changedKeys().hasOnly(['members'])
+        && n is list && n.size() == o.size() + 1
+        && n.hasAll(o) && me in n && !(me in o)
+        && n.size() <= resource.data.level * 5
+        && get(userPath(me)).data.get('guild', null) == null;
+    }
+    // Tự rời: bỏ ĐÚNG UID của mình. Bang chủ rời phải chuyển quyền cho một thành viên còn lại. Không được làm rỗng danh sách.
+    function guildSelfLeave() {
+      let o = guildMembersOld();
+      let n = guildMembersNew();
+      let me = request.auth.uid;
+      return signedIn()
+        && me in o && n is list && !(me in n)
+        && n.size() == o.size() - 1 && n.size() >= 1
+        && o.hasAll(n)
+        && (
+          (me != resource.data.leader && changedKeys().hasOnly(['members']))
+          || (me == resource.data.leader && changedKeys().hasOnly(['members', 'leader'])
+              && request.resource.data.leader in n)
+        );
+    }
+    // Bang chủ trục xuất ĐÚNG 1 thành viên khác (bang chủ vẫn ở lại)
+    function guildKickMember() {
+      let o = guildMembersOld();
+      let n = guildMembersNew();
+      return signedIn() && resource.data.leader == request.auth.uid
+        && changedKeys().hasOnly(['members'])
+        && n is list && n.size() == o.size() - 1
+        && o.hasAll(n) && request.auth.uid in n;
+    }
+
+    match /guilds/{gid} {
+      allow read: if signedIn();
+      allow create: if false;  // => callable createGuild (trừ 500 LT, tạo doc, gán users.guild)
+      allow update: if guildLeaderNotice() || guildSelfJoin() || guildSelfLeave() || guildKickMember();
+      // Chỉ bang chủ giải tán. Không còn nhánh "members rỗng thì ai cũng xoá được".
+      allow delete: if signedIn() && resource.data.leader == request.auth.uid;
+    }
+
+    // ------------------------------ quizShares/{code} ------------------------------
+    match /quizShares/{code} {
+      allow get: if signedIn() && !isHidden('quiz__' + code);
+      allow list: if false;
+      allow create: if signedIn()
+        && code.matches('[A-Z2-9]{8}')
+        && request.resource.data.keys().hasOnly(['t', 'd', 'owner', 'createdAt'])
+        && request.resource.data.keys().hasAll(['t', 'd', 'owner', 'createdAt'])
+        && request.resource.data.owner == request.auth.uid
+        && isStr(request.resource.data.t, 300)
+        && request.resource.data.d is list && request.resource.data.d.size() >= 1 && request.resource.data.d.size() <= 500
+        && request.resource.data.createdAt is number
+        && request.resource.data.createdAt > request.time.toMillis() - 600000
+        && request.resource.data.createdAt < request.time.toMillis() + 600000;
+      allow update: if false;  // immutable
+      allow delete: if signedIn() && (resource.data.get('owner', '') == request.auth.uid || isAdmin());
+    }
+
+    // ------------------------------ videoShares/{code} ------------------------------
+    // YÊU CẦU CLIENT: thêm field owner = uid khi tạo (hiện payload chưa có owner).
+    match /videoShares/{code} {
+      allow get: if signedIn() && !isHidden('video__' + code);
+      allow list: if false;
+      allow create: if signedIn()
+        && code.matches('[A-Z2-9]{8}')
+        && request.resource.data.keys().hasOnly(['link', 'summary', 'translations', 'transcript', 'isCjk',
+             'transcriptPinyin', 'transcriptTranslation', 'transcriptTime', 'owner', 'createdAt'])
+        && request.resource.data.keys().hasAll(['link', 'summary', 'owner', 'createdAt'])
+        && request.resource.data.owner == request.auth.uid
+        && isStr(request.resource.data.link, 500)
+        && request.resource.data.get('translations', []) is list && request.resource.data.get('translations', []).size() <= 5000
+        && request.resource.data.get('transcript', []) is list && request.resource.data.get('transcript', []).size() <= 5000
+        && request.resource.data.get('transcriptPinyin', []) is list && request.resource.data.get('transcriptPinyin', []).size() <= 5000
+        && request.resource.data.get('transcriptTranslation', []) is list && request.resource.data.get('transcriptTranslation', []).size() <= 5000
+        && request.resource.data.get('transcriptTime', []) is list && request.resource.data.get('transcriptTime', []).size() <= 5000
+        && request.resource.data.get('isCjk', false) is bool
+        && request.resource.data.createdAt is number
+        && request.resource.data.createdAt > request.time.toMillis() - 600000
+        && request.resource.data.createdAt < request.time.toMillis() + 600000;
+      allow update: if false;
+      allow delete: if signedIn() && (resource.data.get('owner', '') == request.auth.uid || isAdmin());
+    }
+
+    // ------------------------------ meta/* ------------------------------
+    // nextReset và mọi mốc mùa: chỉ Cloud Functions (Admin SDK) ghi. Client chỉ đọc để hiện đồng hồ.
+    match /meta/{docId} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    // ------------------------------ admins/{uid} ------------------------------
+    match /admins/{uid} {
+      allow get: if isOwner(uid);
+      allow list, write: if false;
+    }
+
+    // ------------------------------ reports/{reporterUid__type__id} ------------------------------
+    match /reports/{rid} {
+      allow get: if isAdmin() || (signedIn() && rid.matches(request.auth.uid + '__.*'));
+      allow list: if isAdmin();
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['targetType', 'targetId', 'targetLabel', 'reason', 'note', 'reporter', 'status', 'createdAt'])
+        && request.resource.data.keys().hasAll(['targetType', 'targetId', 'reason', 'reporter', 'status', 'createdAt'])
+        && request.resource.data.targetType in ['user', 'guild', 'quiz', 'video']
+        // id báo cáo = <uid>__<targetType>__<id mã hoá> => một người một báo cáo cho mỗi đối tượng
+        && rid.matches(request.auth.uid + '__' + request.resource.data.targetType + '__.+')
+        && request.resource.data.reporter == request.auth.uid
+        && request.resource.data.status == 'open'
+        && isStr(request.resource.data.targetId, 200) && request.resource.data.targetId.size() > 0
+        && request.resource.data.reason in ['abuse', 'sexual', 'scam', 'impersonate', 'privacy', 'other']
+        && isStr(request.resource.data.get('note', ''), 200)
+        && isStr(request.resource.data.get('targetLabel', ''), 80)
+        && request.resource.data.createdAt == request.time;
+      // Duyệt báo cáo CHỈ qua Cloud Function adminModerate
+      allow update, delete: if false;
+    }
+
+    // ------------------------------ hiddenContent/{type__id} ------------------------------
+    match /hiddenContent/{key} {
+      allow read: if signedIn();
+      // Ẩn/khôi phục CHỈ qua Cloud Function adminModerate (có nhật ký adminAudit); client kể cả admin không ghi trực tiếp.
+      allow create, update, delete: if false;
+    }
+
+    // ------------------------------ cheatFlags/{id}: tín hiệu bất thường quiz, chỉ server ghi, admin đọc ------------------------------
+    match /cheatFlags/{id} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // ------------------------------ adminAudit/{id}: nhật ký quản trị, chỉ server ghi ------------------------------
+    match /adminAudit/{id} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // ------------------------------ mặc định: chặn ------------------------------
+    // Bao gồm: giftCodes, users/*/serverState, mọi collection chưa khai báo.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
