@@ -1,0 +1,23 @@
+node_modules/
+.env
+.env.*
+!.env.example
+firebase-debug.log
+functions/node_modules/
+serviceAccount*.json
+*.local
+# Log / kết quả chạy local (không commit)
+*-result.txt
+emulators-log.txt
+*-debug.log
+.firebase/
+# js/firebase-config.js KHÔNG ignore ở bản FULL: đây là Web config công khai và PHẢI được deploy cùng app.html (GitHub Pages/Vercel).
+# Bản Commercial phải ignore file này. Hạn chế key bằng HTTP referrer trong Google Cloud Console.
+# Rác hệ điều hành / editor / báo cáo phủ
+.DS_Store
+Thumbs.db
+*.log
+*.swp
+*~
+coverage/
+.nyc_output/
